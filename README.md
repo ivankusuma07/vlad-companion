@@ -139,7 +139,9 @@ rate limited per IP.
 ## Before deploying
 
 - [x] `RH_CHAIN_RPC_URL` / `RH_CHAIN_ID` / `RH_CHAIN_EXPLORER_BASE` — filled and
-      verified against official docs (chain id 4663, Blockscout explorer).
+      verified against official docs (chain id 4663). Explorer is
+      robinscan.io — note its address page is `/address/{addr}`, not
+      `/token/{addr}` like Blockscout uses.
 - [ ] `RH_CHAIN_DEX_BASE` — still blank. Uniswap's RH Chain deployment URL.
 - [ ] `RADAR_SOURCE` — still on mock. `COINGECKO_API_KEY` is the fastest real
       one to wire (free Demo key, no indexer to run — see Wiring a live radar
