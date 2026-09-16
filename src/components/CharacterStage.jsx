@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { BRAND } from "@/brand.config.js";
-import { probeAlphaVideoSupport } from "@/lib/characterMedia.js";
 
 // Character stage. Currently plays a looping clip per state rather than a
 // real Live2D Cubism model — no .moc3/model3.json exists in this repo yet,
@@ -19,10 +18,6 @@ import { probeAlphaVideoSupport } from "@/lib/characterMedia.js";
 export default function CharacterStage({ statusLine }) {
   const [state, setState] = useState("IDLE");
   const [videoError, setVideoError] = useState(false);
-  // Starts false (safe opaque mp4) and silently upgrades to the transparent
-  // webm only once the probe actively confirms the browser can decode it —
-  // never gates first paint on the probe result.
-  const [alphaOk, setAlphaOk] = useState(false);
 
   useEffect(() => {
     const onState = (e) => {
@@ -36,24 +31,19 @@ export default function CharacterStage({ statusLine }) {
     return () => window.removeEventListener("vlad:state", onState);
   }, []);
 
-  useEffect(() => {
-    probeAlphaVideoSupport(BRAND.characterMedia.IDLE.webm).then(setAlphaOk);
-  }, []);
-
-  const media = BRAND.characterMedia[state] || BRAND.characterMedia.IDLE;
-  const src = alphaOk ? media.webm : media.mp4;
+  const src = BRAND.characterMedia[state] || BRAND.characterMedia.IDLE;
 
   return (
     <div className="glass" style={{ padding: "var(--sp-4)", textAlign: "center" }}>
-      <div style={{ position: "relative", height: 260, borderRadius: "var(--radius-xs)", overflow: "hidden", background: alphaOk ? "transparent" : "#000" }}>
+      <div style={{ position: "relative", height: 260, borderRadius: "var(--radius-xs)", overflow: "hidden", background: "#000" }}>
         {videoError ? (
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-3)", fontSize: 13 }}>
             character clip missing — drop it at public{src}
           </div>
         ) : (
-          // key={src} forces a full remount on state/source change so the
-          // browser reliably loads the new clip — some browsers don't
-          // reload media on a bare `src` attribute swap.
+          // key={src} forces a full remount on state change so the browser
+          // reliably loads the new clip — some browsers don't reload media
+          // on a bare `src` attribute swap.
           <video
             key={src}
             src={src}

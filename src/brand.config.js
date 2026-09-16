@@ -43,21 +43,12 @@ export const BRAND = {
   // SCANNING (closer to "something is happening") rather than freezing on
   // idle. Swap these paths for a real Live2D Cubism runtime later; the
   // component reads this map, not literal paths, so that's a drop-in change.
-  //
-  // Each state has two files: `mp4` is the original opaque render (always
-  // safe, works everywhere) and `webm` is the same clip with its flat
-  // background chroma-keyed to real alpha transparency, so the character
-  // blends into the card instead of sitting in a visible rectangle. `webm`
-  // is only used after CharacterStage's capability probe actively confirms
-  // the browser can decode VP9 alpha — Safari/WebKit can't, and it doesn't
-  // fail gracefully (it hangs rather than erroring), so this can't be a
-  // plain <source> fallback list. See src/lib/characterMedia.js.
   characterMedia: {
-    IDLE: { mp4: "/media/idle.mp4", webm: "/media/idle-alpha.webm" },
-    SCANNING: { mp4: "/media/scanning.mp4", webm: "/media/scanning-alpha.webm" },
-    REACT_HOT: { mp4: "/media/scanning.mp4", webm: "/media/scanning-alpha.webm" }, // DEV: no dedicated clip yet
-    REACT_WARN: { mp4: "/media/scanning.mp4", webm: "/media/scanning-alpha.webm" }, // DEV: no dedicated clip yet
-    REPORT: { mp4: "/media/scanning.mp4", webm: "/media/scanning-alpha.webm" }, // DEV: no dedicated clip yet
+    IDLE: "/media/idle.mp4",
+    SCANNING: "/media/scanning.mp4",
+    REACT_HOT: "/media/scanning.mp4", // DEV: no dedicated clip yet
+    REACT_WARN: "/media/scanning.mp4", // DEV: no dedicated clip yet
+    REPORT: "/media/scanning.mp4", // DEV: no dedicated clip yet
   },
 
   disclaimer:
