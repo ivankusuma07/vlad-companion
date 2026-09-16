@@ -80,6 +80,26 @@ a { color: inherit; text-decoration: none; }
 .card--interactive:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--card-edge-hover); }
 .card--interactive:active { transform: translateY(0); }
 
+/* Load-in animation — every .card fades and slides up on first mount, on
+   every page, since .card is the shared surface for token cards, timeline
+   rows, roadmap phases, fact/point cards, footer, and the news feed. `both`
+   fill-mode holds the pre-animation state so nothing flashes unstyled
+   before the animation starts. Runs once on mount, not on every re-render —
+   React reuses existing DOM nodes for unchanged keys (e.g. the radar's 20s
+   poll), so already-visible cards don't replay; only genuinely new ones do.
+   nth-child staggers a list instead of every card popping in at once, capped
+   at ~7 items so a long list (e.g. 25 live radar tokens) doesn't take over
+   a second to finish revealing itself. */
+@keyframes card-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.card { animation: card-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.card:nth-child(2) { animation-delay: 0.05s; }
+.card:nth-child(3) { animation-delay: 0.1s; }
+.card:nth-child(4) { animation-delay: 0.15s; }
+.card:nth-child(5) { animation-delay: 0.2s; }
+.card:nth-child(6) { animation-delay: 0.25s; }
+.card:nth-child(7) { animation-delay: 0.3s; }
+.card:nth-child(n+8) { animation-delay: 0.35s; }
+
 /* Status accent — a left border tied to the same status a token actually has,
    so scanning the list gives a pre-attentive signal instead of requiring
    everyone to read the corner badge on every card. */

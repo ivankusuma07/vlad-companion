@@ -140,8 +140,10 @@ rate limited per IP.
 
 - [x] `RH_CHAIN_RPC_URL` / `RH_CHAIN_ID` / `RH_CHAIN_EXPLORER_BASE` — filled and
       verified against official docs (chain id 4663). Explorer is
-      robinscan.io — note its address page is `/address/{addr}`, not
-      `/token/{addr}` like Blockscout uses.
+      robinscan.io at `/token/{addr}` — both `/token/` and `/address/` resolve
+      for a real token contract; a placeholder/non-existent address 404s on
+      `/token/` specifically, which is what to expect if you test with a
+      fake address rather than a real one from the live radar.
 - [ ] `RH_CHAIN_DEX_BASE` — still blank. Uniswap's RH Chain deployment URL.
 - [ ] `RADAR_SOURCE` — still on mock. `COINGECKO_API_KEY` is the fastest real
       one to wire (free Demo key, no indexer to run — see Wiring a live radar
