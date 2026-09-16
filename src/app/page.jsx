@@ -58,7 +58,7 @@ export default function Scout() {
 
         <div>
           {hottest && (
-            <div className="glass" style={{ padding: "14px 18px", marginBottom: 16, display: "flex", gap: 10, alignItems: "flex-start", borderColor: "rgba(224,177,92,0.35)" }}>
+            <div className="card card--status status-hot" style={{ padding: "var(--sp-3) var(--sp-4)", marginBottom: "var(--sp-4)", display: "flex", gap: "var(--sp-3)", alignItems: "flex-start" }}>
               <Flame size={18} color="var(--amber)" style={{ flexShrink: 0 }} />
               <p style={{ fontSize: 13.5, lineHeight: 1.5, color: "var(--amber)" }}>
                 hottest right now: <b>${hottest.ticker}</b> — vol {fmtUsd(hottest.volPerMin)}/min, +{hottest.holdersDelta} holders. vlad is watching.
@@ -66,12 +66,12 @@ export default function Scout() {
             </div>
           )}
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
             <div>
               <div className="eyebrow">LIVE RADAR · {BRAND.chainName.toUpperCase()}</div>
-              <h1 style={{ fontSize: 22, marginTop: 4 }}>the chain, filtered.</h1>
+              <h1 style={{ fontSize: 24, fontWeight: 600, marginTop: "var(--sp-1)" }}>the chain, filtered.</h1>
             </div>
-            <label style={{ fontSize: 12, color: "var(--text-2)", display: "flex", gap: 8, alignItems: "center", cursor: "pointer" }}>
+            <label style={{ fontSize: 12, color: "var(--text-2)", display: "flex", gap: "var(--sp-2)", alignItems: "center", cursor: "pointer" }}>
               <input type="checkbox" checked={hideThin} onChange={(e) => setHideThin(e.target.checked)} />
               hide thin LP
             </label>
@@ -79,18 +79,18 @@ export default function Scout() {
 
           {/* Nobody should ever mistake placeholder rows for real onchain data. */}
           {radar.source === "mock" && (
-            <div className="glass" style={{ padding: "10px 16px", marginBottom: 14, borderColor: "rgba(224,122,107,0.3)" }}>
+            <div className="card card--status status-warn" style={{ padding: "var(--sp-2) var(--sp-4)", marginBottom: "var(--sp-4)" }}>
               <p className="mono" style={{ fontSize: 11.5, color: "var(--red)" }}>
                 sample data — no {BRAND.chainName} source configured yet. these numbers are not real.
               </p>
             </div>
           )}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-3)" }}>
             {shown.map((t) => <TokenCard key={t.ca} t={t} />)}
           </div>
 
-          <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 18 }}>
+          <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: "var(--sp-5)" }}>
             observations only. vlad does not make calls. info only · DYOR.
           </p>
         </div>

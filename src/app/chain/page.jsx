@@ -27,48 +27,51 @@ const points = [
   },
 ];
 
+// This is the reference page — restrained, spec-sheet register (smaller
+// heading than the lore page, heavier reliance on the facts grid) rather than
+// the same display-size treatment repeated across every page in the app.
 export default function Chain() {
   return (
     <main className="container page" style={{ maxWidth: 860 }}>
       <div className="eyebrow">THE CHAIN — ROBINHOOD CHAIN</div>
-      <h1 style={{ fontSize: "clamp(30px,4.5vw,44px)", margin: "10px 0 14px" }}>
+      <h1 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, letterSpacing: "-0.01em", margin: "var(--sp-2) 0 var(--sp-4)" }}>
         the network vlad watches.
       </h1>
 
-      <div className="glass" style={{ padding: "14px 20px", margin: "18px 0 30px", borderColor: "rgba(224,177,92,0.35)" }}>
+      <div className="card card--status status-hot" style={{ padding: "var(--sp-3) var(--sp-5)", margin: "var(--sp-5) 0 var(--sp-7)" }}>
         <p style={{ fontSize: 13, color: "var(--amber)", lineHeight: 1.6 }}>
           heads up: Robinhood Chain is built and operated by Robinhood Markets. VLAD TENEV
           COMPANION and {BRAND.ticker} are a separate parody project with no affiliation to
           Robinhood or Vlad Tenev. we cover the chain because it&apos;s the network our scout
           lives on. always use{" "}
-          <a href={BRAND.refs.chainDocs} target="_blank" rel="noreferrer" style={{ textDecoration: "underline" }}>
+          <a href={BRAND.refs.chainDocs} target="_blank" rel="noreferrer" className="row-link" style={{ textDecoration: "underline" }}>
             official Robinhood channels
           </a>{" "}
           for anything about the chain itself.
         </p>
       </div>
 
-      <div className="glass" style={{ padding: "22px 26px", marginBottom: 20 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 18 }}>
+      <div className="card" style={{ padding: "var(--sp-5) var(--sp-6)", marginBottom: "var(--sp-5)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "var(--sp-4)" }}>
           {facts.map((f, i) => (
             <div key={i}>
-              <div style={{ fontSize: 11, color: "var(--text-3)", marginBottom: 4 }}>{f.k}</div>
+              <div style={{ fontSize: 11, color: "var(--text-3)", marginBottom: "var(--sp-1)" }}>{f.k}</div>
               <div className="mono" style={{ fontSize: 14 }}>{f.v}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-4)" }}>
         {points.map((u, i) => (
-          <div key={i} className="glass" style={{ padding: "20px 24px" }}>
-            <h3 style={{ fontSize: 17, marginBottom: 8 }}>{u.title}</h3>
+          <div key={i} className="card card--interactive" style={{ padding: "var(--sp-5) var(--sp-6)" }}>
+            <h3 style={{ fontSize: 17, marginBottom: "var(--sp-2)" }}>{u.title}</h3>
             <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.65 }}>{u.body}</p>
           </div>
         ))}
       </div>
 
-      <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 24, lineHeight: 1.6 }}>
+      <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: "var(--sp-6)", lineHeight: 1.6 }}>
         figures are public information as of mid-2026 and can change. verify everything on
         official sources. nothing on this page is financial advice. DYOR.
       </p>

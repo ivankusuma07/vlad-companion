@@ -114,20 +114,30 @@ export default function ChatPanel() {
   };
 
   return (
-    <div className="glass" style={{ padding: 16, marginTop: 14, display: "flex", flexDirection: "column", height: 300 }}>
-      <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 10, paddingRight: 4 }}>
+    <div className="glass" style={{ padding: "var(--sp-4)", marginTop: "var(--sp-3)", display: "flex", flexDirection: "column", height: 300 }}>
+      <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "var(--sp-2)", paddingRight: "var(--sp-1)" }}>
         {msgs.map((m, i) => (
-          <div key={i} style={{ alignSelf: m.from === "you" ? "flex-end" : "flex-start", maxWidth: "85%", fontSize: 13, lineHeight: 1.5, padding: "8px 12px", borderRadius: 12, background: m.from === "you" ? "var(--green-soft)" : "rgba(255,255,255,0.06)", color: m.from === "you" ? "var(--green)" : "var(--text-1)", border: "1px solid " + (m.from === "you" ? "rgba(63,184,110,0.25)" : "var(--glass-edge)") }}>
+          <div key={i} style={{
+            alignSelf: m.from === "you" ? "flex-end" : "flex-start",
+            maxWidth: "85%", fontSize: 13, lineHeight: 1.5,
+            padding: "var(--sp-2) var(--sp-3)",
+            // Asymmetric corner on the "tail" side — the small detail that
+            // separates an actual chat bubble from a uniformly-rounded box.
+            borderRadius: m.from === "you" ? "12px 12px 3px 12px" : "12px 12px 12px 3px",
+            background: m.from === "you" ? "var(--green-soft)" : "rgba(255,255,255,0.06)",
+            color: m.from === "you" ? "var(--green)" : "var(--text-1)",
+            border: "1px solid " + (m.from === "you" ? "rgba(63,184,110,0.25)" : "var(--glass-edge)"),
+          }}>
             {m.text || "…"}
           </div>
         ))}
         {busy && <div style={{ fontSize: 12, color: "var(--text-3)" }}>vlad is typing…</div>}
         <div ref={endRef} />
       </div>
-      <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+      <div style={{ display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-3)" }}>
         <input value={input} maxLength={MAX_CHARS} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="ask vlad…" disabled={busy}
-          style={{ flex: 1, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-edge)", borderRadius: 999, padding: "10px 16px", color: "var(--text-1)", fontSize: 13, outline: "none" }} />
-        <button className="btn" style={{ padding: "10px 14px", fontSize: 13 }} onClick={send} disabled={busy} aria-label="Send message">
+          style={{ flex: 1, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-edge)", borderRadius: 999, padding: "var(--sp-2) var(--sp-4)", color: "var(--text-1)", fontSize: 13, outline: "none", transition: "border-color 0.15s ease" }} />
+        <button className="btn" style={{ padding: "var(--sp-2) var(--sp-3)", fontSize: 13 }} onClick={send} disabled={busy} aria-label="Send message">
           <Send size={15} />
         </button>
       </div>

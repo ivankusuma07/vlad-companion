@@ -2,6 +2,17 @@ import { STATUS, fmtUsd, readFor } from "@/lib/feed.js";
 import { useMemo } from "react";
 import { ArrowUp, ArrowDown, Lock, TriangleAlert, CircleHelp, ExternalLink } from "lucide-react";
 
+// Status -> the accent class that colors the card's left border. Tying color
+// to the actual data (not just the corner pill) means a fast scroll through
+// the list gives a real pre-attentive signal instead of requiring everyone to
+// stop and read each badge individually.
+const STATUS_ACCENT = {
+  HEATING: "status-hot",
+  WATCHING: "status-watch",
+  THIN_LP: "status-warn",
+  COOLING: "status-cool",
+};
+
 export default function TokenCard({ t }) {
   const st = STATUS[t.status] || STATUS.WATCHING;
   const read = useMemo(() => readFor(t.status), [t.status]);
@@ -11,15 +22,15 @@ export default function TokenCard({ t }) {
   const { dex, explorer } = t.links || {};
 
   return (
-    <div className="glass" style={{ padding: 16 }}>
+    <div className={`card card--interactive card--status ${STATUS_ACCENT[t.status] || "status-cool"}`} style={{ padding: "var(--sp-4)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <span className="display" style={{ fontWeight: 600, fontSize: 17 }}>${t.ticker}</span>
-          <span style={{ fontSize: 12, color: "var(--text-3)", marginLeft: 8 }}>{t.ageMin}m old</span>
+          <span style={{ fontSize: 12, color: "var(--text-3)", marginLeft: "var(--sp-2)" }}>{t.ageMin}m old</span>
         </div>
         <span className={`pill ${st.cls}`}>{st.label}</span>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, margin: "14px 0 10px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-2)", margin: "var(--sp-4) 0 var(--sp-2)" }}>
         <Stat label="MCap" value={fmtUsd(t.mcap)} />
         <Stat label="Vol/min" value={fmtUsd(t.volPerMin)} />
         <Stat
@@ -44,14 +55,14 @@ export default function TokenCard({ t }) {
         />
       </div>
       <div style={{ fontSize: 12.5, color: "var(--text-2)", fontStyle: "italic" }}>“{read}”</div>
-      <div style={{ display: "flex", gap: 14, marginTop: 12 }}>
+      <div style={{ display: "flex", gap: "var(--sp-4)", marginTop: "var(--sp-3)" }}>
         {dex && (
-          <a className="mono" style={ext} href={dex} target="_blank" rel="noreferrer">
+          <a className="mono row-link" style={ext} href={dex} target="_blank" rel="noreferrer">
             trade <ExternalLink size={11} style={{ verticalAlign: -1 }} />
           </a>
         )}
         {explorer && (
-          <a className="mono" style={ext} href={explorer} target="_blank" rel="noreferrer">
+          <a className="mono row-link" style={ext} href={explorer} target="_blank" rel="noreferrer">
             explorer <ExternalLink size={11} style={{ verticalAlign: -1 }} />
           </a>
         )}

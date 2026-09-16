@@ -19,7 +19,7 @@ export default function Navbar() {
 
   return (
     <header style={s.header}>
-      <nav className="glass glass--strong" style={s.bar}>
+      <nav className="glass glass--strong" style={{ ...s.bar, borderRadius: open ? "var(--radius)" : "999px" }}>
         <Link href="/" style={s.logo} className="display" onClick={() => setOpen(false)}>
           <span style={{ color: "var(--green)" }}>●</span> {BRAND.name}
         </Link>
@@ -31,6 +31,7 @@ export default function Navbar() {
             const active = l.to === "/" ? pathname === "/" : pathname.startsWith(l.to);
             return (
               <Link key={l.to} href={l.to} onClick={() => setOpen(false)}
+                className={"nav-link" + (active ? " is-active" : "")}
                 style={{ ...s.link, color: active ? "var(--green)" : "var(--text-2)" }}>
                 {l.label}
               </Link>
