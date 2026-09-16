@@ -132,4 +132,8 @@ input[type="text"]:focus-visible, input:not([type]):focus-visible {
 .live-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: inherit; animation: live-pulse 2s ease-out infinite; }
 @keyframes live-pulse { 0% { opacity: 0.6; transform: scale(1); } 100% { opacity: 0; transform: scale(2.4); } }
 
+/* Character clip swap on state change — a hard cut between two video loops
+   reads as a glitch; this softens it into an intentional transition. */
+@keyframes char-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

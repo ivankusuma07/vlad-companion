@@ -38,6 +38,19 @@ export const BRAND = {
   // Live2D character states (dev wires model to these)
   characterStates: ["IDLE", "SCANNING", "REACT_HOT", "REACT_WARN", "REPORT"],
 
+  // Per-state clips for the character stage. Only IDLE and SCANNING have
+  // dedicated footage so far — the three reactive states fall back to
+  // SCANNING (closer to "something is happening") rather than freezing on
+  // idle. Swap these paths for a real Live2D Cubism runtime later; the
+  // component reads this map, not literal paths, so that's a drop-in change.
+  characterMedia: {
+    IDLE: "/media/idle.mp4",
+    SCANNING: "/media/scanning.mp4",
+    REACT_HOT: "/media/scanning.mp4", // DEV: no dedicated clip yet
+    REACT_WARN: "/media/scanning.mp4", // DEV: no dedicated clip yet
+    REPORT: "/media/scanning.mp4", // DEV: no dedicated clip yet
+  },
+
   disclaimer:
     "VLAD TENEV COMPANION is a parody / community project. Not affiliated with, endorsed by, or connected to Robinhood Markets, Robinhood Chain, or Vlad Tenev. Nothing here is financial advice. DYOR.",
 };

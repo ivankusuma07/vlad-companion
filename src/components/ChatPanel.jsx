@@ -12,6 +12,9 @@ import { Send } from "lucide-react";
 const MAX_CHARS = 2000;
 const HISTORY_LIMIT = 20; // matches the server cap; trimmed here to avoid a 400
 
+const dispatchCharacterState = (state) =>
+  window.dispatchEvent(new CustomEvent("vlad:state", { detail: { state } }));
+
 // The API speaks SSE. This walks the byte stream and yields {event, data}.
 async function* readSSE(response) {
   const reader = response.body.getReader();
@@ -60,6 +63,11 @@ export default function ChatPanel() {
     setMsgs(next);
     setInput("");
     setBusy(true);
+    // Character reacts to the conversation, not just the radar. The radar's
+    // own 20s poll can still override this mid-reply — acceptable; nothing
+    // here locks the two together, and a stray SCANNING flash isn't worth
+    // coordinating across components for.
+    dispatchCharacterState("REPORT");
 
     // Rebuild the API history from what's on screen, dropping the opening line
     // (Vlad speaks first, but the API needs a user message to start).
@@ -110,6 +118,7 @@ export default function ChatPanel() {
       setMsgs((m) => [...m, { from: "vlad", text: "connection lost. i measure what i can reach." }]);
     } finally {
       setBusy(false);
+      dispatchCharacterState("SCANNING"); // back to the radar's own ambient default
     }
   };
 
