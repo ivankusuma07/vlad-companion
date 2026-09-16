@@ -1,3 +1,4 @@
+import { ArrowRight } from "lucide-react";
 import { BRAND } from "@/brand.config.js";
 
 // Full-screen gate shown before the app. Background = Bix's generated video.
@@ -13,7 +14,9 @@ export default function LoadingGate({ onEnter }) {
         <div className="eyebrow" style={{ marginBottom: 14 }}>{BRAND.product}</div>
         <h1 className="display" style={styles.headline}>{g.headline}</h1>
         <p style={styles.sub}>{g.sub}</p>
-        <button className="btn btn--green" style={{ marginTop: 30 }} onClick={onEnter}>{g.cta} →</button>
+        <button className="btn btn--green" style={{ marginTop: 30 }} onClick={onEnter}>
+          {g.cta} <ArrowRight size={16} />
+        </button>
         <p style={styles.legal}>{BRAND.disclaimer}</p>
       </div>
     </div>

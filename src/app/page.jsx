@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Flame } from "lucide-react";
 import CharacterStage from "@/components/CharacterStage.jsx";
 import ChatPanel from "@/components/ChatPanel.jsx";
 import NewsFeed from "@/components/NewsFeed.jsx";
@@ -58,7 +59,7 @@ export default function Scout() {
         <div>
           {hottest && (
             <div className="glass" style={{ padding: "14px 18px", marginBottom: 16, display: "flex", gap: 10, alignItems: "flex-start", borderColor: "rgba(224,177,92,0.35)" }}>
-              <span style={{ fontSize: 16 }}>🔥</span>
+              <Flame size={18} color="var(--amber)" style={{ flexShrink: 0 }} />
               <p style={{ fontSize: 13.5, lineHeight: 1.5, color: "var(--amber)" }}>
                 hottest right now: <b>${hottest.ticker}</b> — vol {fmtUsd(hottest.volPerMin)}/min, +{hottest.holdersDelta} holders. vlad is watching.
               </p>

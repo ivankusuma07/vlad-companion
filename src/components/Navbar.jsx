@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 import { BRAND } from "@/brand.config.js";
 
 const links = [
@@ -22,7 +23,9 @@ export default function Navbar() {
         <Link href="/" style={s.logo} className="display" onClick={() => setOpen(false)}>
           <span style={{ color: "var(--green)" }}>●</span> {BRAND.name}
         </Link>
-        <button aria-label="Menu" style={s.burger} className="nav-burger" onClick={() => setOpen(!open)}>≡</button>
+        <button aria-label={open ? "Close menu" : "Open menu"} style={s.burger} className="nav-burger" onClick={() => setOpen(!open)}>
+          {open ? <X size={24} /> : <Menu size={24} />}
+        </button>
         <div className={"nav-links" + (open ? " open" : "")} style={{ ...s.links, ...(open ? s.linksOpen : {}) }}>
           {links.map((l) => {
             const active = l.to === "/" ? pathname === "/" : pathname.startsWith(l.to);
@@ -50,7 +53,7 @@ const s = {
   header: { position: "fixed", top: 14, left: 0, right: 0, zIndex: 50, padding: "0 20px" },
   bar: { maxWidth: 1240, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 22px", borderRadius: 999, flexWrap: "wrap" },
   logo: { fontWeight: 600, fontSize: 18, letterSpacing: "0.04em", display: "flex", gap: 8, alignItems: "center" },
-  burger: { display: "none", background: "none", border: "none", color: "var(--text-1)", fontSize: 26, cursor: "pointer" },
+  burger: { display: "none", background: "none", border: "none", color: "var(--text-1)", cursor: "pointer", alignItems: "center" },
   links: { display: "flex", gap: 26, alignItems: "center" },
   linksOpen: { width: "100%", flexDirection: "column", paddingTop: 14, gap: 14 },
   link: { fontFamily: "var(--font-display)", fontSize: 13, letterSpacing: "0.1em", fontWeight: 500 },

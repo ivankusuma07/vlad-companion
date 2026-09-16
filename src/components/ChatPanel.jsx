@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { Send } from "lucide-react";
 
 // Chat UI under the character. Streams from POST /api/chat, so text lands word
 // by word instead of after a long pause.
@@ -126,7 +127,9 @@ export default function ChatPanel() {
       <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
         <input value={input} maxLength={MAX_CHARS} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="ask vlad…" disabled={busy}
           style={{ flex: 1, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-edge)", borderRadius: 999, padding: "10px 16px", color: "var(--text-1)", fontSize: 13, outline: "none" }} />
-        <button className="btn" style={{ padding: "10px 18px", fontSize: 13 }} onClick={send} disabled={busy}>→</button>
+        <button className="btn" style={{ padding: "10px 14px", fontSize: 13 }} onClick={send} disabled={busy} aria-label="Send message">
+          <Send size={15} />
+        </button>
       </div>
     </div>
   );
