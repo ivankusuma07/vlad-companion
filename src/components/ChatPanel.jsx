@@ -51,9 +51,20 @@ export default function ChatPanel() {
   const [msgs, setMsgs] = useState([{ from: "vlad", text: "you found me. ask, or read the chain." }]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
-  const endRef = useRef(null);
+  const listRef = useRef(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+  useEffect(() => {
+    // Scroll only this container's own scrollbar, never the page's.
+    // `endRef.scrollIntoView()` looked equivalent but isn't: when the
+    // browser decides the nearest scrollable ancestor doesn't fully reveal
+    // the target, it scrolls outer ancestors too — including the whole
+    // page — which showed up as an unrelated scroll jump whenever content
+    // elsewhere on the page (e.g. the radar's skeleton-to-loaded swap)
+    // changed the page's height around the same time. Setting scrollTop
+    // directly can only ever affect this one element.
+    const list = listRef.current;
+    if (list) list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
+  }, [msgs]);
 
   const send = async () => {
     const text = input.trim();
@@ -124,7 +135,7 @@ export default function ChatPanel() {
 
   return (
     <div className="glass" style={{ padding: "var(--sp-4)", marginTop: "var(--sp-3)", display: "flex", flexDirection: "column", height: 300 }}>
-      <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "var(--sp-2)", paddingRight: "var(--sp-1)" }}>
+      <div ref={listRef} style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "var(--sp-2)", paddingRight: "var(--sp-1)" }}>
         {msgs.map((m, i) => (
           <div key={i} style={{
             alignSelf: m.from === "you" ? "flex-end" : "flex-start",
@@ -141,7 +152,6 @@ export default function ChatPanel() {
           </div>
         ))}
         {busy && <div style={{ fontSize: 12, color: "var(--text-3)" }}>vlad is typing…</div>}
-        <div ref={endRef} />
       </div>
       <div style={{ display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-3)" }}>
         <input value={input} maxLength={MAX_CHARS} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="ask vlad…" disabled={busy}
