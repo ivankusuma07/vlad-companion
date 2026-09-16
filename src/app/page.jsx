@@ -6,14 +6,20 @@ import CharacterStage from "@/components/CharacterStage.jsx";
 import ChatPanel from "@/components/ChatPanel.jsx";
 import NewsFeed from "@/components/NewsFeed.jsx";
 import TokenCard from "@/components/TokenCard.jsx";
+import TokenCardSkeleton from "@/components/TokenCardSkeleton.jsx";
 import { fetchRadar, fmtUsd } from "@/lib/feed.js";
 import { BRAND } from "@/brand.config.js";
 
 const POLL_MS = 20_000;
 
+const SKELETON_COUNT = 5;
+
 export default function Scout() {
   const [radar, setRadar] = useState({ tokens: [], source: null, degraded: false });
   const [hideThin, setHideThin] = useState(false);
+  // Only tracks the *first* fetch — the 20s poll after that updates rows
+  // silently in place rather than re-showing skeletons over live data.
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let alive = true;
@@ -33,6 +39,8 @@ export default function Scout() {
         window.dispatchEvent(new CustomEvent("vlad:state", { detail: { state } }));
       } catch {
         // A failed poll isn't worth blanking the board — keep the last rows.
+      } finally {
+        if (alive) setLoading(false);
       }
     };
 
@@ -87,7 +95,9 @@ export default function Scout() {
           )}
 
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-3)" }}>
-            {shown.map((t) => <TokenCard key={t.ca} t={t} />)}
+            {loading
+              ? Array.from({ length: SKELETON_COUNT }).map((_, i) => <TokenCardSkeleton key={i} />)
+              : shown.map((t) => <TokenCard key={t.ca} t={t} />)}
           </div>
 
           <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: "var(--sp-5)" }}>
