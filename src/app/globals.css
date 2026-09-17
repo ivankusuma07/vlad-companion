@@ -1,17 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --base: #0B0F0D;
-  --base-raised: #101613;
-  --base-sunken: #0E1310;
-  --glass: rgba(255, 255, 255, 0.05);
-  --glass-strong: rgba(255, 255, 255, 0.08);
-  --glass-edge: rgba(255, 255, 255, 0.14);
-  --card-edge: rgba(255, 255, 255, 0.09);
-  --card-edge-hover: rgba(255, 255, 255, 0.2);
-  --text-1: #EFF5F0;
-  --text-2: #9AAAA0;
-  --text-3: #5F6E66;
+  /* Flat instrument-panel surfaces, not glass. A hairline (--rule) is the
+     primary separator now; shadows are reserved for the handful of things
+     that should read as genuinely lifted off the page (nav, character/chat). */
+  --base: #090B09;
+  --base-raised: #10130F;
+  --base-sunken: #0C0E0B;
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-strong: rgba(255, 255, 255, 0.07);
+  --glass-edge: rgba(233, 237, 232, 0.14);
+  --rule: rgba(233, 237, 232, 0.10);
+  --rule-strong: rgba(233, 237, 232, 0.24);
+  --card-edge: var(--rule);
+  --card-edge-hover: var(--rule-strong);
+  --text-1: #E9EDE8;
+  --text-2: #8C978E;
+  --text-3: #565F5A;
   --green: #3FB86E;
   --green-soft: rgba(63, 184, 110, 0.14);
   --green-deep: #2C8E58;
@@ -19,12 +24,14 @@
   --amber-soft: rgba(224, 177, 92, 0.14);
   --red: #E07A6B;
   --red-soft: rgba(224, 122, 107, 0.14);
-  --font-display: 'Space Grotesk', sans-serif;
+  /* Serif carries narrative weight (hero, lore); mono is reserved for real
+     data (figures, addresses, timestamps) rather than decorating labels. */
+  --font-display: 'Fraunces', 'Iowan Old Style', serif;
   --font-body: 'Inter', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-  --radius: 18px;
-  --radius-sm: 12px;
-  --radius-xs: 9px;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 10px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
 
   /* Spacing scale — everything in the app should pull from here rather than
      inventing a one-off pixel value; that's what keeps rhythm consistent
@@ -52,86 +59,75 @@ body {
   font-family: var(--font-body);
   color: var(--text-1);
   background:
-    radial-gradient(1100px 600px at 75% -10%, rgba(63, 184, 110, 0.07), transparent 60%),
-    radial-gradient(900px 700px at -10% 110%, rgba(63, 184, 110, 0.05), transparent 55%),
+    linear-gradient(180deg, rgba(63, 184, 110, 0.035) 0%, transparent 340px),
     var(--base);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
-h1, h2, h3, .display { font-family: var(--font-display); letter-spacing: -0.01em; }
-.mono { font-family: var(--font-mono); }
+h1, h2, h3, .display { font-family: var(--font-display); letter-spacing: -0.005em; font-weight: 500; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 a { color: inherit; text-decoration: none; }
 
-/* Reserved for the two genuinely floating surfaces — the nav pill and the
-   character/chat feature. Everything else uses .card below: applying blur
-   and sheen to a footer notice or a list row is decoration doing a job
-   hierarchy should be doing instead. */
-.glass { position: relative; background: var(--glass); backdrop-filter: blur(22px) saturate(1.35); -webkit-backdrop-filter: blur(22px) saturate(1.35); border: 1px solid var(--glass-edge); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-md); }
-.glass::before { content: ""; position: absolute; top: 0; left: 8%; right: 30%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent); pointer-events: none; }
-.glass::after { content: ""; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(255,255,255,0.06) 0%, transparent 34%); pointer-events: none; border-radius: inherit; }
-.glass--strong { background: var(--glass-strong); }
+/* Reserved for the two surfaces that are genuinely "live" instruments rather
+   than static content — the character/chat stack. A flat panel with a bright
+   top edge reads as powered-on without reaching for blur-everything glass. */
+.glass { position: relative; background: var(--base-raised); border: 1px solid var(--glass-edge); border-top: 1px solid var(--rule-strong); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+.glass--strong { background: var(--base-sunken); }
 
-/* The default content surface: flat, solid-toned, shadow-lifted instead of
-   blurred. This is what most of the app should look like — cards read as
-   distinct objects on the page without competing with the nav/chat for
-   "is this the important floating thing" attention. */
-.card { position: relative; background: var(--base-raised); border: 1px solid var(--card-edge); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); }
-.card--interactive { transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease; }
-.card--interactive:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--card-edge-hover); }
-.card--interactive:active { transform: translateY(0); }
-
-/* Load-in animation — every .card fades and slides up on first mount, on
-   every page, since .card is the shared surface for token cards, timeline
-   rows, roadmap phases, fact/point cards, footer, and the news feed. `both`
-   fill-mode holds the pre-animation state so nothing flashes unstyled
-   before the animation starts. Runs once on mount, not on every re-render —
-   React reuses existing DOM nodes for unchanged keys (e.g. the radar's 20s
-   poll), so already-visible cards don't replay; only genuinely new ones do.
-   nth-child staggers a list instead of every card popping in at once, capped
-   at ~7 items so a long list (e.g. 25 live radar tokens) doesn't take over
-   a second to finish revealing itself. */
-@keyframes card-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-.card { animation: card-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.card:nth-child(2) { animation-delay: 0.05s; }
-.card:nth-child(3) { animation-delay: 0.1s; }
-.card:nth-child(4) { animation-delay: 0.15s; }
-.card:nth-child(5) { animation-delay: 0.2s; }
-.card:nth-child(6) { animation-delay: 0.25s; }
-.card:nth-child(7) { animation-delay: 0.3s; }
-.card:nth-child(n+8) { animation-delay: 0.35s; }
+/* The default content surface: a flat panel separated by a hairline border,
+   not a blurred sheet or a drop shadow doing the work of a rule. This is
+   what most of the app should look like — panels read as distinct fields on
+   the page, the way a form or a spec sheet separates its sections. */
+.card { position: relative; background: var(--base-raised); border: 1px solid var(--card-edge); border-radius: var(--radius-sm); }
+.card--interactive { transition: border-color 0.15s ease, background 0.15s ease; }
+.card--interactive:hover { border-color: var(--card-edge-hover); background: var(--base-sunken); }
 
 /* Status accent — a left border tied to the same status a token actually has,
    so scanning the list gives a pre-attentive signal instead of requiring
    everyone to read the corner badge on every card. */
-.card--status { border-left-width: 3px; }
+.card--status { border-left-width: 2px; }
 .card--status.status-hot { border-left-color: var(--amber); }
 .card--status.status-watch { border-left-color: var(--green); }
 .card--status.status-warn { border-left-color: var(--red); }
 .card--status.status-cool { border-left-color: var(--text-3); }
 
-.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: 0.06em; color: var(--text-1); background: var(--glass-strong); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--glass-edge); border-radius: 999px; padding: 14px 28px; cursor: pointer; box-shadow: var(--shadow-sm); transition: background 0.2s, transform 0.15s, border-color 0.2s, box-shadow 0.2s; }
-.btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.24); box-shadow: var(--shadow-md); }
-.btn:active { transform: scale(0.98); }
+.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-body); font-weight: 600; font-size: 14px; color: var(--text-1); background: var(--base-raised); border: 1px solid var(--rule-strong); border-radius: var(--radius-sm); padding: 13px 26px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.btn:hover { background: var(--base-sunken); border-color: var(--text-2); }
+.btn:active { transform: translateY(1px); }
 .btn--green { border-color: rgba(63,184,110,0.4); color: var(--green); }
 .btn--green:hover { background: var(--green-soft); }
 .btn:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 999px; border: 1px solid transparent; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: var(--radius-xs); border: 1px solid transparent; }
 .pill--hot { background: var(--amber-soft); color: var(--amber); border-color: rgba(224,177,92,0.3); }
 .pill--watch { background: var(--green-soft); color: var(--green); border-color: rgba(63,184,110,0.3); }
 .pill--warn { background: var(--red-soft); color: var(--red); border-color: rgba(224,122,107,0.3); }
 .pill--cool { background: rgba(255,255,255,0.06); color: var(--text-2); border-color: var(--glass-edge); }
 
+/* Filter chip — a toggleable scope for the radar list, not a status pill
+   (pill reports a fact about a token; chip is a control the visitor drives).
+   The count inside is the same number the section it filters would show, so
+   picking one is never a guess. */
+.chip { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--text-2); background: var(--base-raised); border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: 7px 12px; cursor: pointer; transition: border-color 0.15s ease, color 0.15s ease; }
+.chip:hover { border-color: var(--rule-strong); color: var(--text-1); }
+.chip.is-active { border-color: rgba(63,184,110,0.4); color: var(--green); background: var(--green-soft); }
+.chip-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); }
+.chip.is-active .chip-count { color: var(--green); opacity: 0.8; }
+
 .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
-.page { padding: 110px 0 80px; }
-.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green); }
+.page { padding: 96px 0 80px; }
+/* Small measurement-style tag — lowercase, mono, no tracking. Used only
+   where it names something genuinely separate from the heading beside it
+   (a data source, a coordinate), never as decoration above a heading that
+   already says what it is. */
+.tag { font-family: var(--font-mono); font-size: 12px; color: var(--text-2); }
 
 /* Nav active-state: an underline, not just a color swap — so "active" reads
    as a distinct signal from "this number went up", which also happens to be
    green. One hue shouldn't have to carry every meaning in the app. */
 .nav-link { position: relative; padding-bottom: 3px; transition: color 0.15s ease; }
-.nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; border-radius: 1px; background: var(--green); transform: scaleX(0); transform-origin: left; transition: transform 0.2s ease; }
+.nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: var(--green); transform: scaleX(0); transform-origin: left; transition: transform 0.2s ease; }
 .nav-link.is-active::after { transform: scaleX(1); }
 
 /* Row-style content (news items, timeline entries) that isn't a card but
