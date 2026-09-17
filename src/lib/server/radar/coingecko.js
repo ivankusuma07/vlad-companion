@@ -57,6 +57,12 @@ function mapPool(pool, tokens) {
   return toRadarToken({
     ticker: token.symbol || "?",
     ca: token.address,
+    // GeckoTerminal's new_pools is one row per *pool*, not per token — the
+    // same contract can have several (paired against WETH, against USDC,
+    // across different DEXes), all sharing this `ca`. pool.id is the one
+    // thing actually unique per row; see toRadarToken()'s `id` field for
+    // why that distinction matters.
+    id: pool.id,
     ageMin,
     // market_cap_usd is circulating; fdv falls back for tokens whose
     // circulating supply CoinGecko hasn't resolved yet — better than 0.
@@ -93,5 +99,18 @@ export async function fetchRadarCoinGecko({ apiKey, network = "robinhood", plan 
     if ((json.data || []).length < 20) break; // last page
   }
 
-  return results.slice(0, limit);
+  // Two page requests aren't an atomic snapshot — if the underlying
+  // "newest pools" list shifts between them (a new pool lands, pushing
+  // the rest down a slot), the same pool can land on both pages. Dedupe
+  // by pool id before returning; a duplicate slipping through means two
+  // rows sharing one React key downstream, which reads as a filtered
+  // view showing a stale row's status after a poll or filter change.
+  const seen = new Set();
+  const deduped = results.filter((t) => {
+    if (seen.has(t.id)) return false;
+    seen.add(t.id);
+    return true;
+  });
+
+  return deduped.slice(0, limit);
 }

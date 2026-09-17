@@ -39,10 +39,22 @@ export function classify(t) {
 // lpLocked is tri-state: true/false when a provider actually read the locker
 // contract, null when it can't yet (Boolean(undefined) would silently collapse
 // "unknown" into "confirmed unlocked", which is a materially different claim).
+//
+// `id` is what the UI keys rows on — it's *not* always the same as `ca`.
+// Most providers return one row per token, where `ca` is already unique.
+// CoinGecko's new_pools doesn't: it's one row per *pool*, and the same
+// token can have several pools, all sharing one `ca`. Rendering with
+// `ca` as the React key in that case gives duplicate keys, which is
+// undefined behavior — React can end up reusing one row's DOM/state for
+// another, so switching filters or a poll landing can show a stale
+// status that belongs to a different row entirely. Providers that are
+// already one-row-per-token can pass `id` through as-is (it'll just
+// equal `ca`); coingecko.js passes the pool's own id instead.
 export function toRadarToken(raw) {
   const t = {
     ticker: String(raw.ticker || "?").toUpperCase().slice(0, 10),
     ca: raw.ca,
+    id: raw.id || raw.ca,
     ageMin: Math.max(0, Math.round(raw.ageMin ?? 0)),
     mcap: Math.max(0, Math.round(raw.mcap ?? 0)),
     volPerMin: Math.max(0, Math.round(raw.volPerMin ?? 0)),
