@@ -12,7 +12,7 @@ const timeline = [
   {
     date: "STANFORD",
     title: "the mathematician",
-    body: "he studies mathematics at stanford, then a master's at UCLA, and starts a phd — before leaving to build. the math never leaves him. it becomes the whole personality.",
+    body: "he studies mathematics at stanford, then a master's at UCLA, and starts a phd before leaving to build. the math never leaves him. it becomes the whole personality.",
   },
   {
     date: "2013",
@@ -27,12 +27,12 @@ const timeline = [
   {
     date: "2024",
     title: "the reasoning engine",
-    body: "vlad co-founds harmonic, an AI company chasing 'mathematical superintelligence' — a reasoning engine with guaranteed accuracy. he describes the dream as solving the riemann hypothesis on a phone.",
+    body: "vlad co-founds harmonic, an AI company chasing 'mathematical superintelligence', a reasoning engine with guaranteed accuracy. he describes the dream as solving the riemann hypothesis on a phone.",
   },
   {
     date: "FEB 2026",
     title: "the chain appears",
-    body: "at consensus hong kong, robinhood launches the public testnet for robinhood chain — an ethereum L2 on arbitrum. it does 4 million transactions in the first week.",
+    body: "at consensus hong kong, robinhood launches the public testnet for robinhood chain, an ethereum L2 on arbitrum. it does 4 million transactions in the first week.",
   },
   {
     date: "JUL 1, 2026",
@@ -42,7 +42,7 @@ const timeline = [
   {
     date: "NOW",
     title: "onchain, always",
-    body: "the chain runs 24/7 at 100ms blocks. ai agents trade, swap, and transact onchain. the next chapter of finance is live — and someone has to watch it.",
+    body: "the chain runs 24/7 at 100ms blocks. ai agents trade, swap, and transact onchain. the next chapter of finance is live and someone has to watch it.",
   },
 ];
 
@@ -58,7 +58,7 @@ export default function WhoIsVlad() {
         the mathematician who put finance onchain.
       </h1>
       <p style={{ color: "var(--text-2)", lineHeight: 1.7, maxWidth: 640 }}>
-        VLAD TENEV COMPANION is a parody tribute to vlad tenev — mathematician, co-founder
+        VLADAR is a tribute to vlad tenev, mathematician, co-founder
         and CEO of robinhood, and the man behind robinhood chain. this page is his story.
         every event below actually happened. we are fans, not affiliates.
       </p>

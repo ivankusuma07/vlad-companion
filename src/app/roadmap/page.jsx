@@ -17,15 +17,15 @@ const phases = [
   {
     phase: "PHASE 2", status: "NEXT", accent: "status-hot", pill: "pill--hot", title: "the alerts",
     items: [
-      "telegram alert bot — vlad pings the chat the moment something moves",
+      "telegram alert bot, vlad pings the chat the moment something moves",
       `holder-gated fast lane: earlier alerts for ${BRAND.ticker} holders`,
-      "watchlist — tell vlad what to measure",
+      "watchlist, tell vlad what to measure",
     ],
   },
   {
     phase: "PHASE 3", status: "PLANNED", accent: "status-cool", pill: "pill--cool", title: "the mirror",
     items: [
-      "pnl companion — connect a wallet, vlad reads your trades and reacts",
+      "pnl companion, connect a wallet, vlad reads your trades and reacts",
       "shareable pnl cards, vlad-branded",
       "leaderboard for the most disciplined hands onchain",
     ],
