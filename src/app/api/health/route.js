@@ -4,12 +4,14 @@
 import { env, hasRpc } from "@/lib/server/env.js";
 import { getRadar } from "@/lib/server/radar/index.js";
 import { resolveProvider, providerModel } from "@/lib/server/chat/index.js";
+import { getNews } from "@/lib/server/news.js";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   const radar = await getRadar().catch(() => null);
+  const news = await getNews().catch(() => null);
   const provider = resolveProvider();
 
   return Response.json({
@@ -18,6 +20,6 @@ export async function GET() {
     chat: { live: provider !== "canned", provider, model: providerModel(provider) },
     radar: { source: radar?.source ?? "unknown", degraded: radar?.degraded ?? true, tokens: radar?.tokens.length ?? 0 },
     links: { explorer: Boolean(env.explorerBase), dex: Boolean(env.dexBase) },
-    news: { remote: Boolean(env.newsSourceUrl) },
+    news: { source: news?.source ?? "unknown" },
   });
 }
