@@ -25,7 +25,7 @@ export default function NewsFeed() {
               <span className="mono" style={{ fontSize: 10.5, color: "var(--green)" }}>{n.tag}</span>
               <span style={{ fontSize: 11, color: "var(--text-3)" }}>{n.time}</span>
             </div>
-            <p style={{ fontSize: 13, lineHeight: 1.55, color: "var(--text-1)" }}>{n.text}</p>
+            <p style={{ fontSize: 13, lineHeight: 1.55, color: "var(--text-1)", overflowWrap: "anywhere" }}>{n.text}</p>
           </a>
         ))}
       </div>

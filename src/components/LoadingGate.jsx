@@ -84,7 +84,11 @@ function MiniStat({ label, value }) {
 
 const styles = {
   wrap: { position: "fixed", inset: 0, overflow: "hidden", background: "var(--base)" },
-  video: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" },
+  // Blurred and slightly scaled up — the scale keeps the blur from revealing
+  // a hard, unblurred edge at the viewport boundary. Softening the whole
+  // frame (not just what's behind the panel) keeps the footage as
+  // atmosphere rather than something competing with the copy for focus.
+  video: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "blur(10px) saturate(1.1)", transform: "scale(1.06)" },
   scrim: { position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(9,11,9,0.3) 0%, rgba(9,11,9,0.5) 55%, rgba(9,11,9,0.82) 100%)" },
   center: { position: "relative", minHeight: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "80px 20px" },
   panel: {
