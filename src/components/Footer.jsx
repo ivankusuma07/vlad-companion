@@ -11,12 +11,21 @@ export default function Footer() {
           </div>
         </div>
         <div style={{ display: "flex", gap: "var(--sp-5)" }}>
-          <a href={BRAND.links.x} target="_blank" rel="noreferrer" className="row-link" style={lnk}>X</a>
-          <a href={BRAND.links.telegram} target="_blank" rel="noreferrer" className="row-link" style={lnk}>Telegram</a>
+          <a href={BRAND.links.x} target="_blank" rel="noreferrer" className="row-link" aria-label="X (formerly Twitter)" style={{ color: "var(--text-2)", display: "flex" }}>
+            <XLogo size={16} />
+          </a>
         </div>
-        <p style={{ width: "100%", color: "var(--text-3)", fontSize: 11, lineHeight: 1.6 }}>{BRAND.disclaimer}</p>
       </div>
     </footer>
   );
 }
-const lnk = { color: "var(--text-2)", fontFamily: "var(--font-body)", fontWeight: 500, fontSize: 13 };
+
+// x.com's mark — not in lucide (it only ships the generic close/"X" glyph,
+// which isn't drawn to the brand's proportions), so it's hand-drawn here.
+function XLogo({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+    </svg>
+  );
+}

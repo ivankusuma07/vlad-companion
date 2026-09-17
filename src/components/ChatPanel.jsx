@@ -146,7 +146,7 @@ export default function ChatPanel() {
             borderRadius: m.from === "you" ? "12px 12px 3px 12px" : "12px 12px 12px 3px",
             background: m.from === "you" ? "var(--green-soft)" : "rgba(255,255,255,0.06)",
             color: m.from === "you" ? "var(--green)" : "var(--text-1)",
-            border: "1px solid " + (m.from === "you" ? "rgba(63,184,110,0.25)" : "var(--glass-edge)"),
+            border: "1px solid " + (m.from === "you" ? "rgba(204,255,0,0.25)" : "var(--glass-edge)"),
           }}>
             {m.text || "…"}
           </div>
