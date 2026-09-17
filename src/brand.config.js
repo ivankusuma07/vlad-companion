@@ -38,15 +38,15 @@ export const BRAND = {
   // Live2D character states (dev wires model to these)
   characterStates: ["IDLE", "SCANNING", "REACT_HOT", "REACT_WARN", "REPORT"],
 
-  // Per-state clips for the character stage. Only IDLE and SCANNING have
-  // dedicated footage so far — the three reactive states fall back to
-  // SCANNING (closer to "something is happening") rather than freezing on
-  // idle. Swap these paths for a real Live2D Cubism runtime later; the
+  // Per-state clips for the character stage. IDLE, SCANNING, and REACT_HOT
+  // each have dedicated footage; REACT_WARN and REPORT fall back to
+  // REACT_HOT's clip (closer to "something is happening" than freezing on
+  // idle). Swap these paths for a real Live2D Cubism runtime later; the
   // component reads this map, not literal paths, so that's a drop-in change.
   characterMedia: {
     IDLE: "/media/idle_vlad.mp4",
     SCANNING: "/media/scanning_vlad.mp4",
-    REACT_HOT: "/media/react_hot.mp4", // DEV: no dedicated clip yet
+    REACT_HOT: "/media/react_hot.mp4",
     REACT_WARN: "/media/react_hot.mp4", // DEV: no dedicated clip yet
     REPORT: "/media/react_hot.mp4", // DEV: no dedicated clip yet
   },

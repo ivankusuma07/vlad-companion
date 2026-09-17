@@ -28,13 +28,18 @@ subsystems fall back to something safe and say so on screen:
 
 ```
 src/app/            App Router pages + API routes
+  page.jsx             Scout — the live radar (/)
+  who-is-vlad/          lore timeline
+  roadmap/              phase stepper + cards
+  chain/                Robinhood Chain reference page
+  api/                  see below
 src/components/     UI (client components)
 src/lib/            shared — feed.js (API client), evm.js (address validation)
 src/lib/server/     backend only; never bundled to the browser
   persona.js          Vlad's system prompt + the hard rules
-  chat.js             Messages API streaming + input validation
-  radar/              classify.js, mock.js, subgraph.js, alchemy.js, index.js
-  chain.js            viem client, explorer/DEX URL builders
+  chat/                anthropic.js, openrouter.js, guardrail.js, index.js (provider resolution)
+  radar/               classify.js, mock.js, coingecko.js, subgraph.js, alchemy.js, index.js
+  chain.js             viem client, explorer/DEX URL builders
   news.js, cache.js, rate-limit.js, env.js
 ```
 
@@ -47,6 +52,33 @@ src/lib/server/     backend only; never bundled to the browser
 | `GET /api/news` | curated right-rail items |
 | `GET /api/scan?address=0x…` | EVM address validation + ERC20 read |
 | `GET /api/health` | which subsystems are live |
+
+## Frontend
+
+Dark, flat instrument-panel UI — hairline borders and shadow only where
+something is genuinely floating (nav, character/chat, the gate), not glass or
+drop-shadows everywhere. Tokens (color, type, spacing, radii) live in
+[globals.css](src/app/globals.css) `:root`; components pull from those `var(--…)`
+values rather than hardcoding.
+
+Type: **Fraunces** (serif) carries headlines and Vlad's lore — narrative
+weight, not a geometric sans. **Inter** is body copy. **JetBrains Mono** is
+reserved for actual data — figures, tickers, timestamps, addresses — never
+used to decorate a label.
+
+| Page | What it's built around |
+|---|---|
+| `/` (Scout) | Companion + a hero spotlight for the hottest token + tracked/heating/thin-LP/feed stat tiles, then a filter-chip radar grid (heating rows always sort to the top) with a per-card volume "heat" bar. Chat is a floating dock you summon, not a fixed sidebar. |
+| `/who-is-vlad` | A real timeline — a connected spine with a node per event, not a stack of cards with a date printed in the corner. |
+| `/roadmap` | A stepper across the top (live / next / planned at a glance) above three side-by-side phase cards. |
+| `/chain` | A hero block-time stat + a small stack diagram (ethereum → chain → agentic accounts), not a wall of paragraph cards. |
+
+The loading gate ([LoadingGate.jsx](src/components/LoadingGate.jsx)) plays a
+full-bleed, blurred background video (`BRAND.gate.videoSrc`) behind a floating
+panel with a live-radar preview card — a real product teaser, not a mockup.
+`.card` gets a staggered fade/scale-in on mount everywhere (see `card-in` in
+globals.css), capped at ~8 items per list so a long radar page doesn't take a
+full second to finish revealing itself.
 
 ## Chain: Robinhood Chain (EVM)
 
