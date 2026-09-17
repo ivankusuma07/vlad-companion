@@ -1,22 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Flame } from "lucide-react";
+import { X, ExternalLink } from "lucide-react";
 import CharacterStage from "@/components/CharacterStage.jsx";
 import ChatPanel from "@/components/ChatPanel.jsx";
 import NewsFeed from "@/components/NewsFeed.jsx";
 import TokenCard from "@/components/TokenCard.jsx";
 import TokenCardSkeleton from "@/components/TokenCardSkeleton.jsx";
-import { fetchRadar, fmtUsd } from "@/lib/feed.js";
+import { fetchRadar, fmtUsd, readFor } from "@/lib/feed.js";
 import { BRAND } from "@/brand.config.js";
 
 const POLL_MS = 20_000;
+const SKELETON_COUNT = 4;
 
-const SKELETON_COUNT = 5;
+const FILTERS = [
+  { key: "ALL", label: "all" },
+  { key: "HEATING", label: "heating" },
+  { key: "WATCHING", label: "watching" },
+  { key: "THIN_LP", label: "thin lp" },
+  { key: "COOLING", label: "cooling" },
+];
 
 export default function Scout() {
   const [radar, setRadar] = useState({ tokens: [], source: null, degraded: false });
+  const [filter, setFilter] = useState("ALL");
   const [hideThin, setHideThin] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   // Only tracks the *first* fetch — the 20s poll after that updates rows
   // silently in place rather than re-showing skeletons over live data.
   const [loading, setLoading] = useState(true);
@@ -54,35 +63,50 @@ export default function Scout() {
 
   const { tokens } = radar;
   const hottest = tokens.find((t) => t.status === "HEATING");
-  const shown = hideThin ? tokens.filter((t) => t.status !== "THIN_LP") : tokens;
+  const byFilter = filter === "ALL" ? tokens : tokens.filter((t) => t.status === filter);
+  const shown = hideThin ? byFilter.filter((t) => t.status !== "THIN_LP") : byFilter;
+  const maxVol = Math.max(1, ...shown.map((t) => t.volPerMin || 0));
+
+  const counts = {
+    ALL: tokens.length,
+    HEATING: tokens.filter((t) => t.status === "HEATING").length,
+    WATCHING: tokens.filter((t) => t.status === "WATCHING").length,
+    THIN_LP: tokens.filter((t) => t.status === "THIN_LP").length,
+    COOLING: tokens.filter((t) => t.status === "COOLING").length,
+  };
 
   return (
     <main className="container page">
-      <div style={{ display: "grid", gridTemplateColumns: "320px minmax(0,1fr) 300px", gap: 20, alignItems: "start" }} className="scout-grid">
-        <div style={{ position: "sticky", top: 100 }}>
-          <CharacterStage statusLine={radar.source === "mock" ? "watching · sample data" : "watching · live"} />
-          <ChatPanel />
+      {/* Instrument row: companion, the one token worth a glance right now,
+          and the counts behind the filters below — read left to right once,
+          not re-derived by scrolling a list. */}
+      <div className="scout-top" style={{ display: "grid", gridTemplateColumns: "280px minmax(0,1fr) 240px", gap: 16, alignItems: "stretch", marginBottom: "var(--sp-6)" }}>
+        <CharacterStage statusLine={radar.source === "mock" ? "sample data" : "live"} />
+        <HeroToken t={hottest} loading={loading} />
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 12, height: "100%" }}>
+          <StatTile label="tracked" value={tokens.length} />
+          <StatTile label="heating" value={counts.HEATING} color={counts.HEATING ? "var(--amber)" : undefined} />
+          <StatTile label="thin lp" value={counts.THIN_LP} color={counts.THIN_LP ? "var(--red)" : undefined} />
+          <StatTile label="feed" value={radar.source === "mock" ? "sample" : "live"} live />
         </div>
+      </div>
 
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 300px", gap: 20, alignItems: "start" }} className="scout-grid">
         <div>
-          {hottest && (
-            <div className="card card--status status-hot" style={{ padding: "var(--sp-3) var(--sp-4)", marginBottom: "var(--sp-4)", display: "flex", gap: "var(--sp-3)", alignItems: "flex-start" }}>
-              <Flame size={18} color="var(--amber)" style={{ flexShrink: 0 }} />
-              <p style={{ fontSize: 13.5, lineHeight: 1.5, color: "var(--amber)" }}>
-                hottest right now: <b>${hottest.ticker}</b> — vol {fmtUsd(hottest.volPerMin)}/min, +{hottest.holdersDelta} holders. vlad is watching.
-              </p>
-            </div>
-          )}
+          <div style={{ marginBottom: "var(--sp-4)" }}>
+            <h1 style={{ fontSize: "clamp(24px,3vw,30px)" }}>the chain, filtered.</h1>
+            <p className="tag" style={{ marginTop: "var(--sp-1)" }}>live radar over {BRAND.chainName.toLowerCase()}</p>
+          </div>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
-            <div>
-              <div className="eyebrow">LIVE RADAR · {BRAND.chainName.toUpperCase()}</div>
-              <h1 style={{ fontSize: 24, fontWeight: 600, marginTop: "var(--sp-1)" }}>the chain, filtered.</h1>
-            </div>
-            <label style={{ fontSize: 12, color: "var(--text-2)", display: "flex", gap: "var(--sp-2)", alignItems: "center", cursor: "pointer" }}>
-              <input type="checkbox" checked={hideThin} onChange={(e) => setHideThin(e.target.checked)} />
-              hide thin LP
-            </label>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--sp-2)", marginBottom: "var(--sp-5)" }}>
+            {FILTERS.map((f) => (
+              <button key={f.key} className={"chip" + (filter === f.key ? " is-active" : "")} onClick={() => setFilter(f.key)}>
+                {f.label} <span className="chip-count">{counts[f.key]}</span>
+              </button>
+            ))}
+            <button className={"chip" + (hideThin ? " is-active" : "")} onClick={() => setHideThin((v) => !v)}>
+              hide thin lp
+            </button>
           </div>
 
           {/* Nobody should ever mistake placeholder rows for real onchain data. */}
@@ -94,27 +118,124 @@ export default function Scout() {
             </div>
           )}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-3)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: "var(--sp-3)" }}>
             {loading
               ? Array.from({ length: SKELETON_COUNT }).map((_, i) => <TokenCardSkeleton key={i} />)
-              : shown.map((t) => <TokenCard key={t.ca} t={t} />)}
+              : shown.map((t) => <TokenCard key={t.ca} t={t} heatPct={Math.round(((t.volPerMin || 0) / maxVol) * 100)} />)}
           </div>
+
+          {!loading && shown.length === 0 && (
+            <p style={{ fontSize: 13, color: "var(--text-3)", marginTop: "var(--sp-5)" }}>nothing matches this filter right now.</p>
+          )}
 
           <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: "var(--sp-5)" }}>
             observations only. vlad does not make calls. info only · DYOR.
           </p>
         </div>
 
-        <div style={{ position: "sticky", top: 100 }}>
+        <div style={{ position: "sticky", top: 88 }}>
           <NewsFeed />
         </div>
       </div>
+
+      {/* Chat is a surface you summon, not permanent chrome fighting the
+          radar for space — a dock anchored off the corner, not another
+          column. */}
+      {chatOpen && (
+        <div className="glass chat-dock" style={s.chatDock}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "var(--sp-3) var(--sp-3) 0" }}>
+            <span className="tag">ask vlad</span>
+            <button aria-label="Close chat" onClick={() => setChatOpen(false)} style={s.dockClose}><X size={16} /></button>
+          </div>
+          <ChatPanel />
+        </div>
+      )}
+      <button className="chip" style={s.launcher} onClick={() => setChatOpen((v) => !v)}>
+        <span className="live-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", display: "inline-block" }} />
+        {chatOpen ? "close chat" : "chat with vlad"}
+      </button>
+
       <style>{`
         @media (max-width: 1080px) {
+          .scout-top { grid-template-columns: 1fr !important; }
           .scout-grid { grid-template-columns: 1fr !important; }
-          .scout-grid > div { position: static !important; }
+          .scout-grid > div:last-child { position: static !important; }
+        }
+        @media (max-width: 520px) {
+          .chat-dock { width: calc(100vw - 32px) !important; right: 16px !important; }
         }
       `}</style>
     </main>
   );
 }
+
+function StatTile({ label, value, color, live }) {
+  return (
+    <div className="card" style={{ padding: "var(--sp-3) var(--sp-4)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <span className="tag" style={{ fontSize: 11 }}>{label}</span>
+      <span className="mono" style={{ fontSize: 20, marginTop: 4, color: color || "var(--text-1)", display: "flex", alignItems: "center", gap: 6 }}>
+        {live && <span className="live-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", display: "inline-block" }} />}
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function HeroToken({ t, loading }) {
+  if (loading) return <div className="card" />;
+
+  if (!t) {
+    return (
+      <div className="card" style={{ padding: "var(--sp-5)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <span className="tag">hottest right now</span>
+        <p style={{ color: "var(--text-2)", fontSize: 14, marginTop: "var(--sp-2)" }}>nothing heating. vlad is still scanning.</p>
+      </div>
+    );
+  }
+
+  const { dex, explorer } = t.links || {};
+  return (
+    <div className="card card--status status-hot" style={{ padding: "var(--sp-5)" }}>
+      <span className="tag">hottest right now</span>
+      <div style={{ display: "flex", alignItems: "baseline", gap: "var(--sp-2)", margin: "var(--sp-2) 0 var(--sp-4)" }}>
+        <span className="display" style={{ fontSize: 30, fontWeight: 600 }}>${t.ticker}</span>
+        <span style={{ fontSize: 12, color: "var(--text-3)" }}>{t.ageMin}m old</span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "var(--sp-3)" }}>
+        <Stat label="vol/min" value={fmtUsd(t.volPerMin)} />
+        <Stat label="mcap" value={fmtUsd(t.mcap)} />
+        <Stat label="holders" value={t.holders} />
+        <Stat label="lp" value={fmtUsd(t.lpUsd)} />
+      </div>
+      <p style={{ fontSize: 13, color: "var(--text-2)", fontStyle: "italic", margin: "var(--sp-4) 0" }}>&ldquo;{readFor(t.status)}&rdquo; — vlad</p>
+      <div style={{ display: "flex", gap: "var(--sp-4)" }}>
+        {dex && (
+          <a className="mono row-link" style={s.heroLink} href={dex} target="_blank" rel="noreferrer">
+            trade <ExternalLink size={11} />
+          </a>
+        )}
+        {explorer && (
+          <a className="mono row-link" style={s.heroLink} href={explorer} target="_blank" rel="noreferrer">
+            explorer <ExternalLink size={11} />
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stat({ label, value }) {
+  return (
+    <div>
+      <div className="tag" style={{ fontSize: 10.5 }}>{label}</div>
+      <div className="mono" style={{ fontSize: 14, marginTop: 2 }}>{value}</div>
+    </div>
+  );
+}
+
+const s = {
+  launcher: { position: "fixed", right: 24, bottom: 24, zIndex: 60 },
+  dockClose: { background: "none", border: "none", color: "var(--text-2)", cursor: "pointer", display: "flex" },
+  chatDock: { position: "fixed", right: 24, bottom: 76, zIndex: 60, width: 320, padding: 0 },
+  heroLink: { fontSize: 11, color: "var(--text-3)", display: "inline-flex", alignItems: "center", gap: 4 },
+};

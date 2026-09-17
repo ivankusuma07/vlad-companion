@@ -17,12 +17,12 @@ export default function NewsFeed() {
 
   return (
     <div className="card" style={{ padding: "var(--sp-4)" }}>
-      <div className="eyebrow" style={{ marginBottom: "var(--sp-4)" }}>VLAD FEED</div>
+      <h2 style={{ fontSize: 16, marginBottom: "var(--sp-4)" }}>vlad feed</h2>
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-4)" }}>
         {items.map((n, i) => (
           <a key={i} href={n.url} target="_blank" rel="noreferrer" className="row-link" style={{ borderTop: i ? "1px solid var(--card-edge)" : "none", paddingTop: i ? "var(--sp-4)" : 0, display: "block" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--sp-2)" }}>
-              <span className="mono" style={{ fontSize: 10, letterSpacing: "0.12em", color: "var(--green)" }}>{n.tag}</span>
+              <span className="mono" style={{ fontSize: 10.5, color: "var(--green)" }}>{n.tag}</span>
               <span style={{ fontSize: 11, color: "var(--text-3)" }}>{n.time}</span>
             </div>
             <p style={{ fontSize: 13, lineHeight: 1.55, color: "var(--text-1)" }}>{n.text}</p>

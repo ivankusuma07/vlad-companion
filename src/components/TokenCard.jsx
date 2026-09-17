@@ -13,7 +13,14 @@ const STATUS_ACCENT = {
   COOLING: "status-cool",
 };
 
-export default function TokenCard({ t }) {
+const BAR_COLOR = {
+  HEATING: "var(--amber)",
+  WATCHING: "var(--green)",
+  THIN_LP: "var(--red)",
+  COOLING: "var(--text-3)",
+};
+
+export default function TokenCard({ t, heatPct }) {
   const st = STATUS[t.status] || STATUS.WATCHING;
   const read = useMemo(() => readFor(t.status), [t.status]);
 
@@ -30,6 +37,13 @@ export default function TokenCard({ t }) {
         </div>
         <span className={`pill ${st.cls}`}>{st.label}</span>
       </div>
+      {/* Volume relative to the hottest row on screen right now — a real
+          comparison, not a decorative gradient. */}
+      {typeof heatPct === "number" && (
+        <div style={{ height: 3, background: "var(--rule)", borderRadius: 999, overflow: "hidden", marginTop: "var(--sp-3)" }}>
+          <div style={{ height: "100%", width: `${Math.max(heatPct, 3)}%`, background: BAR_COLOR[t.status] || "var(--text-3)", borderRadius: 999 }} />
+        </div>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-2)", margin: "var(--sp-4) 0 var(--sp-2)" }}>
         <Stat label="MCap" value={fmtUsd(t.mcap)} />
         <Stat label="Vol/min" value={fmtUsd(t.volPerMin)} />

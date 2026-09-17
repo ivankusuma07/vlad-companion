@@ -67,8 +67,8 @@ export default function CharacterStage({ statusLine }) {
 
 const s = {
   stateTag: {
-    position: "absolute", bottom: 8, right: 10, fontSize: 10, letterSpacing: "0.06em",
-    color: "rgba(239,245,240,0.75)", background: "rgba(0,0,0,0.45)",
-    padding: "2px 7px", borderRadius: 6, pointerEvents: "none",
+    position: "absolute", bottom: 8, right: 10, fontSize: 10,
+    color: "rgba(233,237,232,0.8)", background: "rgba(0,0,0,0.5)",
+    padding: "2px 7px", borderRadius: 4, pointerEvents: "none",
   },
 };

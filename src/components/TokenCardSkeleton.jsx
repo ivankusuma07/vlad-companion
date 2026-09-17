@@ -17,6 +17,7 @@ export default function TokenCardSkeleton() {
         </div>
         <Skeleton width={62} height={20} radius={999} />
       </div>
+      <Skeleton width="100%" height={3} radius={999} style={{ marginTop: "var(--sp-3)" }} />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-2)", margin: "var(--sp-4) 0 var(--sp-2)" }}>
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i}>

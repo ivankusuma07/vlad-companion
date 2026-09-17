@@ -7,24 +7,28 @@ import { Menu, X } from "lucide-react";
 import { BRAND } from "@/brand.config.js";
 
 const links = [
-  { to: "/", label: "SCOUT" },
-  { to: "/who-is-vlad", label: "WHO IS VLAD?" },
-  { to: "/roadmap", label: "ROADMAP" },
-  { to: "/chain", label: "THE CHAIN" },
+  { to: "/", label: "Scout" },
+  { to: "/who-is-vlad", label: "Who is Vlad" },
+  { to: "/roadmap", label: "Roadmap" },
+  { to: "/chain", label: "The Chain" },
 ];
 
+// Edge-to-edge instrument header, not a floating blurred pill — a bottom
+// hairline is the only separator from the page, same device every panel in
+// the app uses.
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
   return (
     <header style={s.header}>
-      <nav className="glass glass--strong" style={{ ...s.bar, borderRadius: open ? "var(--radius)" : "999px" }}>
+      <nav style={s.bar}>
         <Link href="/" style={s.logo} className="display" onClick={() => setOpen(false)}>
-          <span style={{ color: "var(--green)" }}>●</span> {BRAND.name}
+          {BRAND.name}
+          <span className="live-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", display: "inline-block" }} />
         </Link>
         <button aria-label={open ? "Close menu" : "Open menu"} style={s.burger} className="nav-burger" onClick={() => setOpen(!open)}>
-          {open ? <X size={24} /> : <Menu size={24} />}
+          {open ? <X size={22} /> : <Menu size={22} />}
         </button>
         <div className={"nav-links" + (open ? " open" : "")} style={{ ...s.links, ...(open ? s.linksOpen : {}) }}>
           {links.map((l) => {
@@ -51,11 +55,11 @@ export default function Navbar() {
 }
 
 const s = {
-  header: { position: "fixed", top: 14, left: 0, right: 0, zIndex: 50, padding: "0 20px" },
-  bar: { maxWidth: 1240, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 22px", borderRadius: 999, flexWrap: "wrap" },
-  logo: { fontWeight: 600, fontSize: 18, letterSpacing: "0.04em", display: "flex", gap: 8, alignItems: "center" },
+  header: { position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: "rgba(9,11,9,0.86)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", borderBottom: "1px solid var(--rule)" },
+  bar: { maxWidth: 1240, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 24px", flexWrap: "wrap" },
+  logo: { fontSize: 19, display: "flex", gap: 8, alignItems: "center" },
   burger: { display: "none", background: "none", border: "none", color: "var(--text-1)", cursor: "pointer", alignItems: "center" },
-  links: { display: "flex", gap: 26, alignItems: "center" },
-  linksOpen: { width: "100%", flexDirection: "column", paddingTop: 14, gap: 14 },
-  link: { fontFamily: "var(--font-display)", fontSize: 13, letterSpacing: "0.1em", fontWeight: 500 },
+  links: { display: "flex", gap: 30, alignItems: "center" },
+  linksOpen: { width: "100%", flexDirection: "column", paddingTop: 16, gap: 16 },
+  link: { fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 500 },
 };

@@ -19,4 +19,4 @@ export default function Footer() {
     </footer>
   );
 }
-const lnk = { color: "var(--text-2)", fontFamily: "var(--font-display)", fontSize: 13, letterSpacing: "0.08em" };
+const lnk = { color: "var(--text-2)", fontFamily: "var(--font-body)", fontWeight: 500, fontSize: 13 };

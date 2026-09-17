@@ -155,7 +155,7 @@ export default function ChatPanel() {
       </div>
       <div style={{ display: "flex", gap: "var(--sp-2)", marginTop: "var(--sp-3)" }}>
         <input value={input} maxLength={MAX_CHARS} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="ask vlad…" disabled={busy}
-          style={{ flex: 1, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-edge)", borderRadius: 999, padding: "var(--sp-2) var(--sp-4)", color: "var(--text-1)", fontSize: 13, outline: "none", transition: "border-color 0.15s ease" }} />
+          style={{ flex: 1, background: "var(--base-sunken)", border: "1px solid var(--rule)", borderRadius: "var(--radius-sm)", padding: "var(--sp-2) var(--sp-4)", color: "var(--text-1)", fontSize: 13, outline: "none", transition: "border-color 0.15s ease" }} />
         <button className="btn" style={{ padding: "var(--sp-2) var(--sp-3)", fontSize: 13 }} onClick={send} disabled={busy} aria-label="Send message">
           <Send size={15} />
         </button>

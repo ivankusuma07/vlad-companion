@@ -46,14 +46,15 @@ const timeline = [
   },
 ];
 
-// The story page — the biggest, most dramatic heading treatment in the app
-// (the lore deserves the weight the reference/plan pages don't need) and the
-// timeline rows get a hover lift since they're the thing being read/scanned.
+// The story page — a real timeline (a connected spine with a node per event),
+// not a stack of cards with a date printed in the corner. The last node is
+// "now", so it's the one that gets the live pulse — everything before it is
+// history, that one is still happening.
 export default function WhoIsVlad() {
+  const last = timeline.length - 1;
   return (
     <main className="container page" style={{ maxWidth: 860 }}>
-      <div className="eyebrow">WHO IS VLAD?</div>
-      <h1 style={{ fontSize: "clamp(32px,5.5vw,52px)", fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1.08, margin: "var(--sp-2) 0 var(--sp-4)" }}>
+      <h1 style={{ fontSize: "clamp(32px,5.5vw,50px)", lineHeight: 1.08, margin: "0 0 var(--sp-4)" }}>
         the mathematician who put finance onchain.
       </h1>
       <p style={{ color: "var(--text-2)", lineHeight: 1.7, maxWidth: 640 }}>
@@ -62,23 +63,38 @@ export default function WhoIsVlad() {
         every event below actually happened. we are fans, not affiliates.
       </p>
 
-      <div style={{ marginTop: "var(--sp-7)", display: "flex", flexDirection: "column", gap: "var(--sp-4)" }}>
+      <div style={{ marginTop: "var(--sp-7)", display: "flex", flexDirection: "column", gap: "var(--sp-5)" }}>
         {timeline.map((t, i) => (
-          <div key={i} className="card card--interactive" style={{ padding: "var(--sp-5) var(--sp-6)", display: "grid", gridTemplateColumns: "120px 1fr", gap: "var(--sp-4)" }}>
-            <div className="mono" style={{ fontSize: 12, color: "var(--green)", letterSpacing: "0.1em", paddingTop: 3 }}>{t.date}</div>
-            <div>
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "84px 20px 1fr", gap: "var(--sp-3)" }}>
+            <div className="mono" style={{ fontSize: 12, color: "var(--green)", textAlign: "right", paddingTop: 5 }}>{t.date}</div>
+
+            {/* Node + the segment of spine leading to the next one — built from
+                flow layout (no magic offsets), so it stretches to match
+                whatever height that row's card ends up being. */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <span
+                className={i === last ? "live-dot" : undefined}
+                style={{
+                  width: 9, height: 9, borderRadius: "50%", flexShrink: 0, marginTop: 6,
+                  background: i === last ? "var(--green)" : "var(--base-raised)",
+                  border: `2px solid ${i === last ? "var(--green)" : "var(--rule-strong)"}`,
+                }}
+              />
+              {i < last && <div style={{ flex: 1, width: 1, background: "var(--rule)", marginTop: 6 }} />}
+            </div>
+
+            <div className="card card--interactive" style={{ padding: "var(--sp-4) var(--sp-5)" }}>
               <h3 style={{ fontSize: 17, marginBottom: "var(--sp-2)" }}>{t.title}</h3>
               <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.65 }}>{t.body}</p>
+              {i === last && (
+                <p style={{ marginTop: "var(--sp-3)", paddingTop: "var(--sp-3)", borderTop: "1px solid var(--rule)", fontSize: 13, color: "var(--green)", lineHeight: 1.6 }}>
+                  that&apos;s why vlad exists here — a scout built on his one rule: trust the math,
+                  measure everything, predict nothing. the numbers don&apos;t lie.
+                </p>
+              )}
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="card" style={{ marginTop: "var(--sp-6)", padding: "var(--sp-5) var(--sp-6)" }}>
-        <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.7 }}>
-          that's why vlad exists here — a scout built on his one rule: trust the math,
-          measure everything, predict nothing. the numbers don't lie.
-        </p>
       </div>
     </main>
   );
