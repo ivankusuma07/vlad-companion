@@ -192,16 +192,17 @@ rate limited per IP.
       `/token/` specifically, which is what to expect if you test with a
       fake address rather than a real one from the live radar.
 - [ ] `RH_CHAIN_DEX_BASE` — still blank. Uniswap's RH Chain deployment URL.
-- [ ] `RADAR_SOURCE` — still on mock. `COINGECKO_API_KEY` is the fastest real
-      one to wire (free Demo key, no indexer to run — see Wiring a live radar
-      above).
+- [x] `RADAR_SOURCE` — live via `coingecko` (`COINGECKO_API_KEY` set). Confirm
+      the key is a production key, not the free Demo one, before launch.
 - [ ] Confirm the ticker (`$VLAD` is a placeholder) and set `BRAND.ca` at launch.
 - [ ] Replace `REPLACE_ME` in `BRAND.links` (X, Telegram).
-- [ ] Drop the gate video at `public/media/gate.mp4`.
+- [x] Gate video dropped at `public/media/bgv.mp4` (`BRAND.gate.videoSrc`).
 - [ ] Mount the Live2D model in [CharacterStage.jsx](src/components/CharacterStage.jsx).
-      It already listens for `vlad:state` (`IDLE | SCANNING | REACT_HOT |
-      REACT_WARN | REPORT`); the radar dispatches `REACT_HOT` when a new token
-      starts heating.
+      Character clips are dropped in for `IDLE` / `SCANNING` / `REACT_HOT`
+      (`REACT_WARN` and `REPORT` still fall back to the `REACT_HOT` clip) —
+      it's video, not yet a real Cubism model. It already listens for
+      `vlad:state` (`IDLE | SCANNING | REACT_HOT | REACT_WARN | REPORT`); the
+      radar dispatches `REACT_HOT` when a new token starts heating.
 - [ ] **`cache.js` and `rate-limit.js` are per-instance.** On serverless or
       multi-node, swap the `Map` for Redis/KV or the limiter is bypassable by
       spreading requests across instances.
