@@ -3,8 +3,8 @@
 // Edit here, everything updates. Do not hardcode these values in components.
 
 export const BRAND = {
-  name: "VLAD",
-  product: "VLAD TENEV COMPANION",
+  name: "VLADAR",
+  product: "VLAD RADAR",
   tagline: "he watches the chain so you don't have to.",
   ticker: "$VLAD", // placeholder — change if you lock a different ticker
   ca: null, // set at launch -> shows "Revealed at launch" until then
@@ -16,7 +16,6 @@ export const BRAND = {
   // for chain config — the API returns a ready-built `links` object per token.
   links: {
     x: "https://x.com/REPLACE_ME",
-    telegram: "https://t.me/REPLACE_ME",
   },
 
   // Real Vlad / Robinhood references (feed + lore). DEV: verify handles.
@@ -30,7 +29,7 @@ export const BRAND = {
   gate: {
     videoSrc: "/media/bgv.mp4",
     poster: "/media/gate-poster.jpg", // optional first-frame image
-    headline: "VLAD",
+    headline: "VLADAR",
     sub: "the chain never sleeps. neither does he.",
     cta: "ENTER THE CHAIN",
   },
@@ -51,6 +50,9 @@ export const BRAND = {
     REPORT: "/media/react_hot.mp4", // DEV: no dedicated clip yet
   },
 
+  // Currently unrendered — the gate and footer no longer display it. Kept
+  // here rather than deleted; the /chain page still has its own affiliation
+  // notice in its banner.
   disclaimer:
     "VLAD TENEV COMPANION is a parody / community project. Not affiliated with, endorsed by, or connected to Robinhood Markets, Robinhood Chain, or Vlad Tenev. Nothing here is financial advice. DYOR.",
 };
@@ -60,8 +62,7 @@ export const BRAND = {
 // themeColor). Nothing else in the app should read from this — components
 // use the CSS vars directly. Keep the two in sync by hand; there's no build
 // step wiring them together.
-// Robinhood-family green, deliberately desaturated so it works on dark flat
-// panels (NOT neon).
+// Robinhood's own bright lime green — used as-is, not desaturated.
 export const COLORS = {
   base: "#090B09",
   baseRaised: "#10130F",
@@ -69,8 +70,8 @@ export const COLORS = {
   glassEdge: "rgba(233,237,232,0.14)",
   textPrimary: "#E9EDE8",
   textSecondary: "#8C978E",
-  green: "#3FB86E",
-  greenDeep: "#2C8E58",
+  green: "#CCFF00",
+  greenDeep: "#84A600",
   amber: "#E0B15C",
   red: "#E07A6B",
 };
