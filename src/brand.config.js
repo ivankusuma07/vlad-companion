@@ -44,11 +44,11 @@ export const BRAND = {
   // idle. Swap these paths for a real Live2D Cubism runtime later; the
   // component reads this map, not literal paths, so that's a drop-in change.
   characterMedia: {
-    IDLE: "/media/idle.mp4",
-    SCANNING: "/media/scanning.mp4",
-    REACT_HOT: "/media/scanning.mp4", // DEV: no dedicated clip yet
-    REACT_WARN: "/media/scanning.mp4", // DEV: no dedicated clip yet
-    REPORT: "/media/scanning.mp4", // DEV: no dedicated clip yet
+    IDLE: "/media/idle_vlad.mp4",
+    SCANNING: "/media/scanning_vlad.mp4",
+    REACT_HOT: "/media/react_hot.mp4", // DEV: no dedicated clip yet
+    REACT_WARN: "/media/react_hot.mp4", // DEV: no dedicated clip yet
+    REPORT: "/media/react_hot.mp4", // DEV: no dedicated clip yet
   },
 
   disclaimer:
