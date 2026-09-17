@@ -83,6 +83,21 @@ depends on. Fields a provider can't supply are marked `DEV:` and return `0`
 rather than a guess — for subgraph/Alchemy that's market cap and LP-lock state;
 CoinGecko only has the LP-lock gap.
 
+### News feed
+
+`GET /api/news` (the right-rail "vlad feed") has three tiers in
+[news.js](src/lib/server/news.js); first one configured wins:
+
+1. **`NEWS_SOURCE_URL`** — a JSON file you curate by hand (array of
+   `{ tag, text, time, url }`), for full editorial control with no redeploy.
+2. **`SOCIAL_FETCH_API_KEY`** — live `@RobinhoodApp` posts via
+   [Social Fetch](https://www.socialfetch.dev) (normalized X/Twitter API,
+   no scraping infra). Replies and retweets are filtered out. We tried
+   Nitter RSS first — public mirrors are effectively dead right now (dead
+   domains, 403s, or bot-check challenge pages that block a plain
+   server-side `fetch`), which is why this isn't RSS.
+3. **bundled** — hardcoded fallback, always available.
+
 ## Chat backend
 
 Two interchangeable providers under [src/lib/server/chat/](src/lib/server/chat/).
