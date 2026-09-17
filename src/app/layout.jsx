@@ -8,7 +8,7 @@ export const metadata = {
     "A live2d scout watching every Robinhood Chain launch so you don't have to. Parody / community project. Not affiliated with Robinhood or Vlad Tenev. DYOR.",
 };
 
-export const viewport = { width: "device-width", initialScale: 1, themeColor: "#0B0F0D" };
+export const viewport = { width: "device-width", initialScale: 1, themeColor: "#090B09" };
 
 export default function RootLayout({ children }) {
   return (

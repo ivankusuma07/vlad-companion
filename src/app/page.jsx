@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, ExternalLink } from "lucide-react";
+import { X, ExternalLink, Radar } from "lucide-react";
 import CharacterStage from "@/components/CharacterStage.jsx";
 import ChatPanel from "@/components/ChatPanel.jsx";
 import NewsFeed from "@/components/NewsFeed.jsx";
@@ -64,7 +64,11 @@ export default function Scout() {
   const { tokens } = radar;
   const hottest = tokens.find((t) => t.status === "HEATING");
   const byFilter = filter === "ALL" ? tokens : tokens.filter((t) => t.status === filter);
-  const shown = hideThin ? byFilter.filter((t) => t.status !== "THIN_LP") : byFilter;
+  const filtered = hideThin ? byFilter.filter((t) => t.status !== "THIN_LP") : byFilter;
+  // Heating rows surface first regardless of filter/poll order — that's the
+  // one status worth seeing without scrolling. Stable sort keeps everything
+  // else in the order the radar returned it.
+  const shown = [...filtered].sort((a, b) => (b.status === "HEATING") - (a.status === "HEATING"));
   const maxVol = Math.max(1, ...shown.map((t) => t.volPerMin || 0));
 
   const counts = {
@@ -150,9 +154,26 @@ export default function Scout() {
           <ChatPanel />
         </div>
       )}
-      <button className="chip" style={s.launcher} onClick={() => setChatOpen((v) => !v)}>
-        <span className="live-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", display: "inline-block" }} />
-        {chatOpen ? "close chat" : "chat with vlad"}
+      <button
+        aria-label={chatOpen ? "Close chat" : "Chat with Vlad"}
+        title={chatOpen ? "Close chat" : "Chat with Vlad"}
+        style={s.launcher}
+        onClick={() => setChatOpen((v) => !v)}
+      >
+        {/* The circular clip lives on this inner wrapper, not the button
+            itself — clipping the button would also clip the online badge
+            below, since it needs to sit half outside the circle to read as
+            a badge rather than a watermark on the avatar. */}
+        <span style={s.launcherAvatar}>
+          {chatOpen ? (
+            <X size={20} color="var(--text-1)" />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- an animated
+            // avatar loop; next/image would strip the gif's animation.
+            <img src="/media/vlad_chat.gif" alt="" style={s.launcherGif} />
+          )}
+        </span>
+        {!chatOpen && <span className="live-dot" style={s.launcherDot} />}
       </button>
 
       <style>{`
@@ -186,9 +207,17 @@ function HeroToken({ t, loading }) {
 
   if (!t) {
     return (
-      <div className="card" style={{ padding: "var(--sp-5)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <div className="card" style={{ padding: "var(--sp-5)", height: "100%", display: "flex", flexDirection: "column" }}>
         <span className="tag">hottest right now</span>
-        <p style={{ color: "var(--text-2)", fontSize: 14, marginTop: "var(--sp-2)" }}>nothing heating. vlad is still scanning.</p>
+        <div style={{ flex: 1, display: "flex", alignItems: "center", gap: "var(--sp-4)" }}>
+          <span className="scan-ring">
+            <Radar size={18} color="var(--text-2)" />
+          </span>
+          <div>
+            <p style={{ fontSize: 14 }}>nothing&apos;s heating yet.</p>
+            <p style={{ fontSize: 12, color: "var(--text-3)", marginTop: 3 }}>vlad keeps scanning — next pass in ~{POLL_MS / 1000}s.</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -234,8 +263,20 @@ function Stat({ label, value }) {
 }
 
 const s = {
-  launcher: { position: "fixed", right: 24, bottom: 24, zIndex: 60 },
+  launcher: {
+    position: "fixed", right: 24, bottom: 24, zIndex: 60,
+    width: 58, height: 58, padding: 0, border: "none", background: "none", cursor: "pointer",
+  },
+  launcherAvatar: {
+    width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    background: "var(--base-raised)", border: "1px solid var(--rule-strong)", boxShadow: "var(--shadow-lg)",
+  },
+  launcherGif: { width: "100%", height: "100%", objectFit: "cover" },
+  // Sits astride the avatar's edge rather than inside it — a badge should
+  // read at a glance, not get lost against the gif underneath it.
+  launcherDot: { position: "absolute", top: -2, right: -2, width: 13, height: 13, borderRadius: "50%", background: "var(--green)", border: "3px solid var(--base)" },
   dockClose: { background: "none", border: "none", color: "var(--text-2)", cursor: "pointer", display: "flex" },
-  chatDock: { position: "fixed", right: 24, bottom: 76, zIndex: 60, width: 320, padding: 0 },
+  chatDock: { position: "fixed", right: 24, bottom: 94, zIndex: 60, width: 320, padding: 0 },
   heroLink: { fontSize: 11, color: "var(--text-3)", display: "inline-flex", alignItems: "center", gap: 4 },
 };
