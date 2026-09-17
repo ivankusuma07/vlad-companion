@@ -30,8 +30,8 @@ export const BRAND = {
   gate: {
     videoSrc: "/media/gate.mp4", // <- DEV: drop Bix's generated video here
     poster: "/media/gate-poster.jpg", // optional first-frame image
-    headline: "the chain never sleeps.",
-    sub: "neither does he.",
+    headline: "VLAD",
+    sub: "the chain never sleeps. neither does he.",
     cta: "ENTER THE CHAIN",
   },
 
@@ -55,14 +55,20 @@ export const BRAND = {
     "VLAD TENEV COMPANION is a parody / community project. Not affiliated with, endorsed by, or connected to Robinhood Markets, Robinhood Chain, or Vlad Tenev. Nothing here is financial advice. DYOR.",
 };
 
-// Robinhood-family green, deliberately desaturated so it works with dark glass (NOT neon).
+// Mirrors the tokens in src/app/globals.css (:root) for the rare spot that
+// needs a color in JS rather than CSS (e.g. layout.jsx's viewport
+// themeColor). Nothing else in the app should read from this — components
+// use the CSS vars directly. Keep the two in sync by hand; there's no build
+// step wiring them together.
+// Robinhood-family green, deliberately desaturated so it works on dark flat
+// panels (NOT neon).
 export const COLORS = {
-  base: "#0B0F0D",
-  baseRaised: "#101613",
-  glass: "rgba(255,255,255,0.05)",
-  glassEdge: "rgba(255,255,255,0.14)",
-  textPrimary: "#EFF5F0",
-  textSecondary: "#9AAAA0",
+  base: "#090B09",
+  baseRaised: "#10130F",
+  glass: "rgba(255,255,255,0.045)",
+  glassEdge: "rgba(233,237,232,0.14)",
+  textPrimary: "#E9EDE8",
+  textSecondary: "#8C978E",
   green: "#3FB86E",
   greenDeep: "#2C8E58",
   amber: "#E0B15C",

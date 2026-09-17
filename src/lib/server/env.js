@@ -62,7 +62,13 @@ export const env = {
     .filter(Boolean),
 
   // --- news feed ---
-  newsSourceUrl: str(process.env.NEWS_SOURCE_URL), // JSON the team curates; falls back to bundled
+  newsSourceUrl: str(process.env.NEWS_SOURCE_URL), // JSON the team curates; takes priority over Social Fetch
+  // Social Fetch (socialfetch.dev) — normalized X/Twitter API, no scraping.
+  // Pulls @RobinhoodApp's recent posts. socialFetchApiKey unset = tier
+  // skipped entirely, straight to bundled.
+  socialFetchApiKey: str(process.env.SOCIAL_FETCH_API_KEY),
+  socialFetchBaseUrl: str(process.env.SOCIAL_FETCH_BASE_URL, "https://api.socialfetch.dev"),
+  newsTwitterHandle: str(process.env.NEWS_TWITTER_HANDLE, "RobinhoodApp"),
   newsCacheMs: num(process.env.NEWS_CACHE_MS, 300_000),
 };
 
