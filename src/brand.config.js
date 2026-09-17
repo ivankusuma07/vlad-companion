@@ -28,7 +28,7 @@ export const BRAND = {
 
   // Loading gate
   gate: {
-    videoSrc: "/media/gate.mp4", // <- DEV: drop Bix's generated video here
+    videoSrc: "/media/bgv.mp4",
     poster: "/media/gate-poster.jpg", // optional first-frame image
     headline: "VLAD",
     sub: "the chain never sleeps. neither does he.",
