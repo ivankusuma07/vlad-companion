@@ -22,7 +22,7 @@ const points = [
   {
     title: "real-world assets",
     body: "the chain is built for tokenized real-world assets tokenized stocks and etfs streaming to 120+ countries, plus stablecoins, settling on ethereum.",
-    icon: { cols: 13, rows: 13, fill: coinFill },
+    icon: { cols: 13, rows: 11, fill: houseFill },
   },
   {
     title: "permissionless",
@@ -34,7 +34,7 @@ const points = [
 // Every icon holds this long before it starts assembling — long enough that
 // it reads as a deliberate reveal once the page has settled, not something
 // racing the page's own load-in.
-const MOSAIC_BASE_DELAY = 1.5;
+const MOSAIC_BASE_DELAY = 0.5;
 
 // A small dot-matrix grid — half-lit cells at the silhouette's edge give it
 // a soft "dissolving" boundary instead of a hard pixel outline. Cells scale
@@ -92,14 +92,24 @@ function sparkleFill(r, c) {
   return atEdge ? 0.5 : 1;
 }
 
-// A single coin — a filled disc with a thin embossed groove through the
-// middle so it reads as currency, not just a dot or a planet.
-function coinFill(r, c) {
-  const dist = Math.hypot(r - 6, c - 6);
-  if (dist > 6) return 0;
-  if (dist > 5.2) return 0.5; // dissolving rim
-  if (r === 6) return 0.55; // the groove
-  return 1;
+// A house — real-world assets as something you actually own, not an
+// abstract coin. Pointed roof, square walls, a door notch cut out of the
+// bottom-center so it doesn't read as a plain box under a triangle.
+const HOUSE_ROOF_HW = [0, 1, 2, 3, 4]; // rows 0–4, widening from a point
+function houseFill(r, c) {
+  const d = Math.abs(c - 6);
+  if (r <= 4) {
+    const hw = HOUSE_ROOF_HW[r];
+    if (d > hw) return 0;
+    return d === hw ? 0.5 : 1;
+  }
+  if (r <= 10) {
+    if (d > 4) return 0;
+    if (r >= 8 && c >= 5 && c <= 7) return 0; // the door
+    const atEdge = r === 10 || d === 4;
+    return atEdge ? 0.55 : 1;
+  }
+  return 0;
 }
 
 // An open padlock — the shackle's left leg plugs into the body; its right

@@ -29,16 +29,28 @@ export default function Scout() {
   // Only tracks the *first* fetch — the 20s poll after that updates rows
   // silently in place rather than re-showing skeletons over live data.
   const [loading, setLoading] = useState(true);
+  // A brief pulse on every poll *after* the first — cards already on screen
+  // don't replay their mount animation (React reuses those DOM nodes), so
+  // without this a refresh is invisible unless a row's numbers happen to
+  // change by eye. This is the "the board just moved" cue instead.
+  const [justRefreshed, setJustRefreshed] = useState(false);
 
   useEffect(() => {
     let alive = true;
     let lastHot = null;
+    let firstLoad = true;
 
     const load = async () => {
       try {
         const data = await fetchRadar();
         if (!alive) return;
         setRadar(data);
+
+        if (!firstLoad) {
+          setJustRefreshed(true);
+          setTimeout(() => alive && setJustRefreshed(false), 700);
+        }
+        firstLoad = false;
 
         // Drive the Live2D model off the radar: a newly hot token makes him
         // react, anything else keeps him scanning.
@@ -64,7 +76,11 @@ export default function Scout() {
   const { tokens } = radar;
   const hottest = tokens.find((t) => t.status === "HEATING");
   const byFilter = filter === "ALL" ? tokens : tokens.filter((t) => t.status === filter);
-  const filtered = hideThin ? byFilter.filter((t) => t.status !== "THIN_LP") : byFilter;
+  // "hide thin lp" only makes sense as a cross-cutting trim on top of some
+  // other view — applying it while the status filter itself is "thin lp"
+  // fights the filter you just picked and silently empties the board, which
+  // reads like filtering is broken rather than like two controls disagreeing.
+  const filtered = hideThin && filter !== "THIN_LP" ? byFilter.filter((t) => t.status !== "THIN_LP") : byFilter;
   // Heating rows surface first regardless of filter/poll order — that's the
   // one status worth seeing without scrolling. Stable sort keeps everything
   // else in the order the radar returned it.
@@ -108,7 +124,12 @@ export default function Scout() {
                 {f.label} <span className="chip-count">{counts[f.key]}</span>
               </button>
             ))}
-            <button className={"chip" + (hideThin ? " is-active" : "")} onClick={() => setHideThin((v) => !v)}>
+            <button
+              className={"chip" + (hideThin && filter !== "THIN_LP" ? " is-active" : "")}
+              disabled={filter === "THIN_LP"}
+              title={filter === "THIN_LP" ? "doesn't apply — you're already looking at thin lp" : undefined}
+              onClick={() => setHideThin((v) => !v)}
+            >
               hide thin lp
             </button>
           </div>
@@ -122,10 +143,13 @@ export default function Scout() {
             </div>
           )}
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: "var(--sp-3)" }}>
+          <div
+            className={justRefreshed ? "radar-pulse" : undefined}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: "var(--sp-3)" }}
+          >
             {loading
               ? Array.from({ length: SKELETON_COUNT }).map((_, i) => <TokenCardSkeleton key={i} />)
-              : shown.map((t) => <TokenCard key={t.ca} t={t} heatPct={Math.round(((t.volPerMin || 0) / maxVol) * 100)} />)}
+              : shown.map((t) => <TokenCard key={t.id} t={t} heatPct={Math.round(((t.volPerMin || 0) / maxVol) * 100)} />)}
           </div>
 
           {!loading && shown.length === 0 && (
