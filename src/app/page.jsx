@@ -5,7 +5,7 @@ import { X, ExternalLink, Radar } from "lucide-react";
 import CharacterStage from "@/components/CharacterStage.jsx";
 import ChatPanel from "@/components/ChatPanel.jsx";
 import NewsFeed from "@/components/NewsFeed.jsx";
-import TokenCard from "@/components/TokenCard.jsx";
+import TokenCard, { TokenLogo } from "@/components/TokenCard.jsx";
 import TokenCardSkeleton from "@/components/TokenCardSkeleton.jsx";
 import { fetchRadar, fmtUsd, readFor } from "@/lib/feed.js";
 import { BRAND } from "@/brand.config.js";
@@ -250,9 +250,12 @@ function HeroToken({ t, loading }) {
   return (
     <div className="card card--status status-hot" style={{ padding: "var(--sp-5)" }}>
       <span className="tag">hottest right now</span>
-      <div style={{ display: "flex", alignItems: "baseline", gap: "var(--sp-2)", margin: "var(--sp-2) 0 var(--sp-4)" }}>
-        <span className="display" style={{ fontSize: 30, fontWeight: 600 }}>${t.ticker}</span>
-        <span style={{ fontSize: 12, color: "var(--text-3)" }}>{t.ageMin}m old</span>
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--sp-3)", margin: "var(--sp-2) 0 var(--sp-4)" }}>
+        <TokenLogo src={t.logo} ticker={t.ticker} size={40} />
+        <div style={{ display: "flex", alignItems: "baseline", gap: "var(--sp-2)" }}>
+          <span className="display" style={{ fontSize: 30, fontWeight: 600 }}>${t.ticker}</span>
+          <span style={{ fontSize: 12, color: "var(--text-3)" }}>{t.ageMin}m old</span>
+        </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "var(--sp-3)" }}>
         <Stat label="vol/min" value={fmtUsd(t.volPerMin)} />

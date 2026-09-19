@@ -55,6 +55,9 @@ export function toRadarToken(raw) {
     ticker: String(raw.ticker || "?").toUpperCase().slice(0, 10),
     ca: raw.ca,
     id: raw.id || raw.ca,
+    // Only the coingecko provider has this today; other providers leave it
+    // unset and the UI falls back to a lettered monogram.
+    logo: raw.logo || null,
     ageMin: Math.max(0, Math.round(raw.ageMin ?? 0)),
     mcap: Math.max(0, Math.round(raw.mcap ?? 0)),
     volPerMin: Math.max(0, Math.round(raw.volPerMin ?? 0)),

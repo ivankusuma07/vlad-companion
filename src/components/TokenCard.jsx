@@ -1,5 +1,5 @@
 import { STATUS, fmtUsd, readFor } from "@/lib/feed.js";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ArrowUp, ArrowDown, Lock, TriangleAlert, CircleHelp, ExternalLink } from "lucide-react";
 
 // Status -> the accent class that colors the card's left border. Tying color
@@ -31,9 +31,12 @@ export default function TokenCard({ t, heatPct }) {
   return (
     <div className={`card card--interactive card--status ${STATUS_ACCENT[t.status] || "status-cool"}`} style={{ padding: "var(--sp-4)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div>
-          <span className="display" style={{ fontWeight: 600, fontSize: 17 }}>${t.ticker}</span>
-          <span style={{ fontSize: 12, color: "var(--text-3)", marginLeft: "var(--sp-2)" }}>{t.ageMin}m old</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--sp-2)" }}>
+          <TokenLogo src={t.logo} ticker={t.ticker} />
+          <div>
+            <span className="display" style={{ fontWeight: 600, fontSize: 17 }}>${t.ticker}</span>
+            <span style={{ fontSize: 12, color: "var(--text-3)", marginLeft: "var(--sp-2)" }}>{t.ageMin}m old</span>
+          </div>
         </div>
         <span className={`pill ${st.cls}`}>{st.label}</span>
       </div>
@@ -101,5 +104,30 @@ function Stat({ label, value, color }) {
       <div style={{ fontSize: 11, color: "var(--text-3)" }}>{label}</div>
       <div className="mono" style={{ fontSize: 13, color: color || "var(--text-1)" }}>{value}</div>
     </div>
+  );
+}
+
+// The real market logo when a provider has one indexed (coingecko.js only,
+// today); every other case — no logo yet, or the image genuinely 404s —
+// falls back to a lettered mark instead of a broken-image icon. Exported
+// since the "hottest right now" panel on the Scout page renders the same
+// live token data at a larger size and shouldn't have its own copy of this.
+export function TokenLogo({ src, ticker, size = 28 }) {
+  const [failed, setFailed] = useState(false);
+  const style = { width: size, height: size, borderRadius: "var(--radius-xs)", objectFit: "cover", flexShrink: 0 };
+  if (src && !failed) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- a remote,
+      // per-token URL; next/image's domain allowlist can't cover every
+      // market this radar might end up pointed at.
+      <img src={src} alt="" width={size} height={size} style={style} onError={() => setFailed(true)} />
+    );
+  }
+  return (
+    <span style={{ ...style, background: "var(--green-soft)", border: "1px solid rgba(204,255,0,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <span className="display" style={{ fontSize: size * 0.43, fontWeight: 700, color: "var(--green)", lineHeight: 1 }}>
+        {ticker?.[0] || "?"}
+      </span>
+    </span>
   );
 }

@@ -57,6 +57,9 @@ function mapPool(pool, tokens) {
   return toRadarToken({
     ticker: token.symbol || "?",
     ca: token.address,
+    // Real market logo when GeckoTerminal has one indexed; null for a token
+    // it hasn't resolved artwork for yet — never a broken-image icon.
+    logo: token.image_url || null,
     // GeckoTerminal's new_pools is one row per *pool*, not per token — the
     // same contract can have several (paired against WETH, against USDC,
     // across different DEXes), all sharing this `ca`. pool.id is the one
