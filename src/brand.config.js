@@ -15,7 +15,7 @@ export const BRAND = {
   // (RH_CHAIN_EXPLORER_BASE / RH_CHAIN_DEX_BASE) so there's one source of truth
   // for chain config — the API returns a ready-built `links` object per token.
   links: {
-    x: "https://x.com/REPLACE_ME",
+    x: "https://x.com/VladRadar_",
   },
 
   // Real Vlad / Robinhood references (feed + lore). DEV: verify handles.
