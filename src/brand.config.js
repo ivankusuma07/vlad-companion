@@ -7,7 +7,7 @@ export const BRAND = {
   product: "VLAD RADAR",
   tagline: "he watches the chain so you don't have to.",
   ticker: "$VLAD", // placeholder — change if you lock a different ticker
-  ca: null, // set at launch -> shows "Revealed at launch" until then
+  ca: null, // set at launch (not currently displayed in the UI)
 
   chainName: "Robinhood Chain",
 

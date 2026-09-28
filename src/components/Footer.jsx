@@ -6,9 +6,6 @@ export default function Footer() {
       <div className="card" style={{ padding: "var(--sp-5) var(--sp-6)", display: "flex", flexWrap: "wrap", gap: "var(--sp-4)", justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <div className="display" style={{ fontWeight: 600 }}>{BRAND.product}</div>
-          <div className="mono" style={{ fontSize: 12, color: "var(--text-2)", marginTop: 6 }}>
-            {BRAND.ca ? `CA: ${BRAND.ca}` : "CA: revealed at launch"}
-          </div>
         </div>
         <div style={{ display: "flex", gap: "var(--sp-5)" }}>
           <a href={BRAND.links.x} target="_blank" rel="noreferrer" className="row-link" aria-label="X (formerly Twitter)" style={{ color: "var(--text-2)", display: "flex" }}>
